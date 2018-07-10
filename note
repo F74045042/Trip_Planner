@@ -1,0 +1,8 @@
+Node:
+	weight
+	time
+	type
+Link:
+	distance
+
+H

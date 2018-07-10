@@ -1,0 +1,23 @@
+{
+  "nodes": [
+    {"id": "A", "weight": 1},
+    {"id": "B", "weight": 2},
+    {"id": "C", "weight": 3},
+    {"id": "D", "weight": 4},
+    {"id": "E", "weight": 5},
+    {"id": "F", "weight": 6}
+],
+  "links": [
+    {"source": "A", "target": "B", "distance": 1},
+    {"source": "A", "target": "D", "distance": 8},
+    {"source": "A", "target": "E", "distance": 10},
+    {"source": "B", "target": "C", "distance": 6},
+    {"source": "D", "target": "F", "distance": 5},
+    {"source": "D", "target": "B", "distance": 7},
+    {"source": "B", "target": "E", "distance": 3},
+    {"source": "C", "target": "D", "distance": 1},
+    {"source": "C", "target": "F", "distance": 2},
+    {"source": "E", "target": "F", "distance": 1},
+    {"source": "F", "target": "B", "distance": 2}
+]
+}
