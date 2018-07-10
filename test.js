@@ -12,7 +12,7 @@ var simulation = d3.forceSimulation()
     .force("charge", d3.forceManyBody())
     .force("center", d3.forceCenter(width / 2, height / 2));
 
-d3.json("/Desktop/%E5%B0%88%E9%A1%8C/web/test.json", function(error, graph) {
+d3.json("https://raw.githubusercontent.com/F74045042/Trip_Planner/master/test.json", function(error, graph) {
     if(error) throw error;
 
     var link = svg.append("g")
