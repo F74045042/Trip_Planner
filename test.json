@@ -49,6 +49,5 @@
     {"source": "I", "target": "K", "cost": 15},
     {"source": "I", "target": "L", "cost": 10},
     {"source": "K", "target": "L", "cost": 20}
-
 ]
 }
