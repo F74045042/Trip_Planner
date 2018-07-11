@@ -5,7 +5,7 @@ var color = d3.scaleOrdinal(d3.schemeCategory20);
 
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().distance(function(d) {
-      return 10*d.distance;
+      return d.cost;
     }).strength(0.05).id(function(d) {
         return d.id;
     }))
@@ -30,7 +30,7 @@ d3.json("https://raw.githubusercontent.com/F74045042/Trip_Planner/master/test.js
           return d.weight;
         })
         .attr("fill", function(d) {
-            return color(d.weight);
+            return color(d.time);
         })
         .call(d3.drag()
             .on("start", dragstarted)

@@ -1,8 +1,8 @@
 Node:
 	weight
 	time
-	type
+	type??
 Link:
-	distance
+	cost
 
-H
+max_cost??
