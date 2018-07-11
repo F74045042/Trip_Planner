@@ -1,25 +1,44 @@
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
+
 var color = d3.scaleOrdinal(d3.schemeCategory20);
 
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().distance(function(d) {
-      return 10*d.distance;
-    }).strength(0.05).id(function(d) {
+        return 10 * d.distance;
+    }).strength(0.01).id(function(d) {
         return d.id;
     }))
     .force("charge", d3.forceManyBody())
     .force("center", d3.forceCenter(width / 2, height / 2));
 
+var tooltip = d3.select("body")
+    .append("div")
+    .style("position", "absolute")
+    .style("color", "red")
+    .style("z-index", "10")
+    .style("visibility", "hidden")
+    .text("Text");
+
 d3.json("/Desktop/%E5%B0%88%E9%A1%8C/web/test.json", function(error, graph) {
-    if(error) throw error;
+    if (error) throw error;
 
     var link = svg.append("g")
         .attr("class", "links")
         .selectAll("line")
         .data(graph.links)
-        .enter().append("line");
+        .enter().append("line")
+        .on("mouseover", function(d) {
+            tooltip.text(d.distance);
+            return tooltip.style("visibility", "visible");
+        })
+        .on("mousemove", function() {
+            return tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px");
+        })
+        .on("mouseout", function() {
+            return tooltip.style("visibility", "hidden");
+        });
 
     var node = svg.append("g")
         .attr("class", "nodes")
@@ -27,7 +46,7 @@ d3.json("/Desktop/%E5%B0%88%E9%A1%8C/web/test.json", function(error, graph) {
         .data(graph.nodes)
         .enter().append("circle")
         .attr("r", function(d) {
-          return d.weight;
+            return d.weight;
         })
         .attr("fill", function(d) {
             return color(d.weight);
@@ -37,10 +56,10 @@ d3.json("/Desktop/%E5%B0%88%E9%A1%8C/web/test.json", function(error, graph) {
             .on("drag", dragged)
             .on("end", dragended));
 
-    node.append("title")
-        .text(function(d) {
-            return d.id;
-        });
+    // node.append("title")
+    //     .text(function(d) {
+    //         return d.id;
+    //     });
 
     simulation
         .nodes(graph.nodes)
@@ -70,7 +89,7 @@ d3.json("/Desktop/%E5%B0%88%E9%A1%8C/web/test.json", function(error, graph) {
             })
             .attr("cy", function(d) {
                 return d.y;
-            });
+            })
     }
 });
 
@@ -78,7 +97,6 @@ function dragstarted(d) {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
     d.fx = d.x;
     d.fy = d.y;
-    console.log(d.id);
 }
 
 function dragged(d) {
