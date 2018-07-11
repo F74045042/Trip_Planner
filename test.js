@@ -6,8 +6,8 @@ var color = d3.scaleOrdinal(d3.schemeCategory20);
 
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().distance(function(d) {
-        return 10 * d.distance;
-    }).strength(0.01).id(function(d) {
+        return d.cost;
+    }).strength(0.001).id(function(d) {
         return d.id;
     }))
     .force("charge", d3.forceManyBody())
@@ -16,12 +16,13 @@ var simulation = d3.forceSimulation()
 var tooltip = d3.select("body")
     .append("div")
     .style("position", "absolute")
-    .style("color", "red")
+    .style("color", "blue")
+    .style("font-size", "15px")
     .style("z-index", "10")
     .style("visibility", "hidden")
     .text("Text");
 
-d3.json("/Desktop/%E5%B0%88%E9%A1%8C/web/test.json", function(error, graph) {
+d3.json("https://raw.githubusercontent.com/F74045042/Trip_Planner/master/test.json", function(error, graph) {
     if (error) throw error;
 
     var link = svg.append("g")
@@ -30,7 +31,7 @@ d3.json("/Desktop/%E5%B0%88%E9%A1%8C/web/test.json", function(error, graph) {
         .data(graph.links)
         .enter().append("line")
         .on("mouseover", function(d) {
-            tooltip.text(d.distance);
+            tooltip.text(d.cost);
             return tooltip.style("visibility", "visible");
         })
         .on("mousemove", function() {
@@ -49,12 +50,22 @@ d3.json("/Desktop/%E5%B0%88%E9%A1%8C/web/test.json", function(error, graph) {
             return d.weight;
         })
         .attr("fill", function(d) {
-            return color(d.weight);
+            return color(d.time);
         })
         .call(d3.drag()
             .on("start", dragstarted)
             .on("drag", dragged)
-            .on("end", dragended));
+            .on("end", dragended))
+        .on("mouseover", function(d) {
+            tooltip.text(d.id);
+            return tooltip.style("visibility", "visible");
+        })
+        .on("mousemove", function() {
+            return tooltip.style("top", (event.pageY - 10) + "px").style("left", (event.pageX + 10) + "px");
+        })
+        .on("mouseout", function() {
+            return tooltip.style("visibility", "hidden");
+        });
 
     // node.append("title")
     //     .text(function(d) {
