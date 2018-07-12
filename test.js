@@ -40,18 +40,21 @@ var color = d3.scaleOrdinal(d3.schemeCategory20);
 
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().distance(function(d) {
-        return d.cost;
-    }).strength(0.001).id(function(d) {
+        return 5*d.cost;
+    }).strength(1).id(function(d) {
         return d.id;
     }))
-    .force("charge", d3.forceManyBody())
-    .force("center", d3.forceCenter(width / 2, height / 2));
+    .force("charge", d3.forceManyBody().strength(-20))
+    .force("center", d3.forceCenter(width / 2, height / 2))
+    .force('collision', d3.forceCollide().radius(function(d) {
+        return d.weight
+    }));
 
 var tooltip = d3.select("body")
     .append("div")
     .style("position", "absolute")
     .style("color", "blue")
-    .style("font-size", "15px")
+    .style("font-size", "13px")
     .style("z-index", "10")
     .style("visibility", "hidden")
     .text("Text");
@@ -63,9 +66,12 @@ d3.json("https://raw.githubusercontent.com/F74045042/Trip_Planner/master/test.js
         .attr("class", "links")
         .selectAll("line")
         .data(graph.links)
-        .enter().append("line")
-        .on("mouseover", function(d) {
-            tooltip.text(d.cost);
+        .enter().append("line");
+
+    //mouseover event
+    link.on("mouseover", function(d) {
+            tooltip.style("color", "#33CC33FF");
+            tooltip.text("Cost=" + d.cost);
             return tooltip.style("visibility", "visible");
         })
         .on("mousemove", function() {
@@ -77,9 +83,11 @@ d3.json("https://raw.githubusercontent.com/F74045042/Trip_Planner/master/test.js
 
     var node = svg.append("g")
         .attr("class", "nodes")
-        .selectAll("circle")
+        .selectAll("g")
         .data(graph.nodes)
-        .enter().append("circle")
+        .enter().append("g");
+
+    var circle = node.append("circle")
         .attr("r", function(d) {
             return d.weight;
         })
@@ -89,9 +97,12 @@ d3.json("https://raw.githubusercontent.com/F74045042/Trip_Planner/master/test.js
         .call(d3.drag()
             .on("start", dragstarted)
             .on("drag", dragged)
-            .on("end", dragended))
-        .on("mouseover", function(d) {
-            tooltip.text(d.id);
+            .on("end", dragended));
+
+    //mouseover event
+    circle.on("mouseover", function(d) {
+            tooltip.style("color", "#FF6666FF")
+            tooltip.text("Time=" + d.time);
             return tooltip.style("visibility", "visible");
         })
         .on("mousemove", function() {
@@ -101,11 +112,21 @@ d3.json("https://raw.githubusercontent.com/F74045042/Trip_Planner/master/test.js
             return tooltip.style("visibility", "hidden");
         });
 
+<<<<<<< HEAD
 
 
     
 
 
+=======
+    //show ID beside node
+    var label = node.append("text")
+        .text(function(d) {
+            return d.id;
+        })
+        .attr("x", 15)
+        .attr("y", 0);
+>>>>>>> 4ac8947e4f55254710f16428db23e99a1d7b991d
     // node.append("title")
     //     .text(function(d) {
     //         return d.id;
@@ -134,11 +155,8 @@ d3.json("https://raw.githubusercontent.com/F74045042/Trip_Planner/master/test.js
             });
 
         node
-            .attr("cx", function(d) {
-                return d.x;
-            })
-            .attr("cy", function(d) {
-                return d.y;
+            .attr("transform", function(d) {
+                return "translate(" + d.x + "," + d.y + ")";
             })
     }
 
