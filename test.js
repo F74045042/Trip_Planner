@@ -1,9 +1,24 @@
-/*linked list structure*/
+/* linked list structure */
 function POIList() {
     this.head = null;
+
+    // check if path contains node
+    this.contains = function(node) {
+        let curr;
+        curr = this.head;
+
+        while (curr.next) {
+            if (node == curr.id) {
+                return true;
+            }
+            curr = curr.next;
+        }
+
+        return false;
+    }
 }
 
-
+/* new node */
 function node(id, weight, time, next, down) {
     this.id = id;
     this.weight = weight;
@@ -13,22 +28,36 @@ function node(id, weight, time, next, down) {
 }
 
 
-/*linked list methods*/
+/* linked list member methods */
+// add poi node
 POIList.prototype.addNode = function(id, weight, time) {
-    const newNode = new node(id, weight, time, null);
-    if (this.head) this.head.next = newNode;
-    else this.head = newNode;
+    const newNode = new node(id, weight, time, null, null);
+    let curr;
+
+    if (this.head == null) {
+        this.head = newNode;
+    } else {
+        curr = this.head;
+        while (curr.next) {
+            curr = curr.next;
+        }
+        curr.next = newNode;
+    }
 };
 
+// add poi path
+POIList.prototype.addPath = function() {
 
+
+};
+
+//-----test-----//
 const poiIDX = new POIList();
-
-
-
-
-
-
-
+const testPath = new POIList();
+testPath.addNode("A", 1, 1);
+testPath.addNode("E", 2, 2);
+testPath.addNode("F", 1, 2);
+//--------------//
 
 
 
@@ -40,7 +69,7 @@ var color = d3.scaleOrdinal(d3.schemeCategory20);
 
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().distance(function(d) {
-        return 5*d.cost;
+        return 5 * d.cost;
     }).strength(1).id(function(d) {
         return d.id;
     }))
@@ -59,6 +88,7 @@ var tooltip = d3.select("body")
     .style("visibility", "hidden")
     .text("Text");
 
+
 d3.json("https://raw.githubusercontent.com/F74045042/Trip_Planner/master/test.json", function(error, graph) {
     if (error) throw error;
 
@@ -68,7 +98,7 @@ d3.json("https://raw.githubusercontent.com/F74045042/Trip_Planner/master/test.js
         .data(graph.links)
         .enter().append("line");
 
-    //mouseover event
+    // mouseover event
     link.on("mouseover", function(d) {
             tooltip.style("color", "#33CC33FF");
             tooltip.text("Cost=" + d.cost);
@@ -99,7 +129,25 @@ d3.json("https://raw.githubusercontent.com/F74045042/Trip_Planner/master/test.js
             .on("drag", dragged)
             .on("end", dragended));
 
-    //mouseover event
+
+    // ------------------------- start planning ------------------------ //
+
+    // poi index
+    for (var i = 0; i < graph.nodes.length; i++) {
+        poiIDX.addNode(graph.nodes[i].id, graph.nodes[i].weight, graph.nodes[i].time);
+    }
+
+
+
+
+
+
+
+
+
+    // ----------------------------------------------------------------- //
+
+    // mouseover event
     circle.on("mouseover", function(d) {
             tooltip.style("color", "#FF6666FF")
             tooltip.text("Time=" + d.time);
@@ -112,25 +160,14 @@ d3.json("https://raw.githubusercontent.com/F74045042/Trip_Planner/master/test.js
             return tooltip.style("visibility", "hidden");
         });
 
-<<<<<<< HEAD
-
-
-    
-
-
-=======
-    //show ID beside node
+    // show ID beside node
     var label = node.append("text")
         .text(function(d) {
             return d.id;
         })
         .attr("x", 15)
         .attr("y", 0);
->>>>>>> 4ac8947e4f55254710f16428db23e99a1d7b991d
-    // node.append("title")
-    //     .text(function(d) {
-    //         return d.id;
-    //     });
+
 
     simulation
         .nodes(graph.nodes)
@@ -159,6 +196,23 @@ d3.json("https://raw.githubusercontent.com/F74045042/Trip_Planner/master/test.js
                 return "translate(" + d.x + "," + d.y + ")";
             })
     }
+
+    function isConnected(path, node) {
+        /*iterate to last node in path*/
+        let curr = path.head;
+        while (curr.next) {
+            curr = curr.next;
+        }
+
+        /*check connectivity*/
+        for (var i = 0; i < graph.links.length; i++) {
+            /*source = path.lastNode && target = nodeToCheck OR vice versa*/
+            if ((graph.links[i].source == curr.id && graph.links[i].target == node) || (graph.links[i].target == curr.id && graph.links[i].source == node))
+                return true;
+        }
+        return false;
+    }
+
 
 });
 
