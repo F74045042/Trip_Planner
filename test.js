@@ -1,3 +1,37 @@
+/*linked list structure*/
+function POIList() {
+    this.head = null;
+}
+
+
+function node(id, weight, time, next, down) {
+    this.id = id;
+    this.weight = weight;
+    this.time = time;
+    this.next = next;
+    this.down = down;
+}
+
+
+/*linked list methods*/
+POIList.prototype.addNode = function(id, weight, time) {
+    const newNode = new node(id, weight, time, null);
+    if (this.head) this.head.next = newNode;
+    else this.head = newNode;
+};
+
+
+const poiIDX = new POIList();
+
+
+
+
+
+
+
+
+
+
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
@@ -67,6 +101,11 @@ d3.json("https://raw.githubusercontent.com/F74045042/Trip_Planner/master/test.js
             return tooltip.style("visibility", "hidden");
         });
 
+
+
+    
+
+
     // node.append("title")
     //     .text(function(d) {
     //         return d.id;
@@ -102,6 +141,7 @@ d3.json("https://raw.githubusercontent.com/F74045042/Trip_Planner/master/test.js
                 return d.y;
             })
     }
+
 });
 
 function dragstarted(d) {
