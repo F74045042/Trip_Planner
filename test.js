@@ -6,7 +6,7 @@ var color = d3.scaleOrdinal(d3.schemeCategory20);
 
 var simulation = d3.forceSimulation()
     .force("link", d3.forceLink().distance(function(d) {
-        return 5*d.cost;
+        return 5 * d.cost;
     }).strength(1).id(function(d) {
         return d.id;
     }))
