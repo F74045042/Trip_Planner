@@ -1,3 +1,4 @@
+
 function POIList() {
     this.head = null;
 
@@ -97,6 +98,20 @@ function POIList() {
         return cost;
     }
 
+    // get total weight (for sorting by path importance)
+    this.getTotalWeight = function(graph) {
+        let curr = this.head;
+        var weight = 0;
+
+        while(curr.next) {
+            // add up weight at a poi node
+            weight += curr.weight;
+            curr = curr.next;
+        }
+
+        return weight;
+    }
+
     // check empty
     this.isEmpty = function() {
         return (this.head == null);
@@ -113,7 +128,7 @@ function POIList() {
 
 }
 
-// new node function
+// new node constructor
 function node(id, weight, time, next, down) {
     this.id = id;
     this.weight = weight;
@@ -122,9 +137,9 @@ function node(id, weight, time, next, down) {
     this.down = down;
 }
 
-// new path function
+// new path constructor
 function path(new_path, total_cost, total_weight, down) {
-    this.path = new_path;
+    this.path = _.cloneDeep(new_path);
     this.total_cost = total_cost;
     this.total_weight = total_weight;
     this.down = down;
@@ -267,6 +282,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     console.log(poiIDX.nodeIDX(0));
 
 
+    
+
+
 
 
 
@@ -282,7 +300,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
 
 
-    // ----------------------- self-defined functions -------------------- //
+    // ----------------------- self-defined graph functions -------------------- //
 
     // check if a node is connected to the last poi in a path
     function isConnected(path, node) {
@@ -311,18 +329,18 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         var tot_cost = newPath.getTotalCost(graph);
 
         if (threshold > tot_cost) {
-            for (let i = 0; i < graph.nodes.length; i++) {
+            for (var i = 0; i < graph.nodes.length; i++) {
                 if (isConnected(newPath, graph.nodes[i]) &&
                     !newPath.contains(graph.nodes[i])) {
                     // able to append node to path
-                    arguments.callee(poi_head, graph.nodes[i], threshold, newPath);
+                    genPath(poi_head, graph.nodes[i], threshold, newPath);
                 }
             }
 
         }
 
         // store path
-        poiIDX.addPath(newPath, newPath.getTotalCost(graph), 200, poi_head.index);
+        poiIDX.addPath(newPath, newPath.getTotalCost(graph), newPath.getTotalWeight(graph), poi_head.index);
         newPath.popNode();
         return;
 
