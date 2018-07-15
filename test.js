@@ -262,7 +262,7 @@ d3.json("http://localhost:8000/Desktop/%E5%B0%88%E9%A1%8C/web/test.json", functi
     }
 
     var newPath = new POIList();
-    genPath(poiIDX.nodeIDX(0), graph.nodes[0], 500, newPath);
+    genPath(graph.nodes[1], 500, newPath, 1);
 
     console.log(poiIDX.nodeIDX(0));
 
@@ -304,7 +304,7 @@ d3.json("http://localhost:8000/Desktop/%E5%B0%88%E9%A1%8C/web/test.json", functi
     }
 
     // generate all path with total_cost(link.cost + node.time) under a given threshold from a certain start point  
-    function genPath(poi_head, node, threshold, newPath) {
+    function genPath(node, threshold, newPath, idx) {
 
         // append to path
         newPath.addNode(node.id, node.weight, node.time);
@@ -315,14 +315,14 @@ d3.json("http://localhost:8000/Desktop/%E5%B0%88%E9%A1%8C/web/test.json", functi
                 if (isConnected(newPath, graph.nodes[i]) &&
                     !newPath.contains(graph.nodes[i])) {
                     // able to append node to path
-                    genPath(poi_head, graph.nodes[i], threshold, newPath);
+                    genPath(graph.nodes[i], threshold, newPath, idx);
                 }
             }
 
         }
 
         // store path
-        poiIDX.addPath(newPath, newPath.getTotalCost(graph), 200, poi_head.index);
+        poiIDX.addPath(newPath, newPath.getTotalCost(graph), 200, idx);
         newPath.popNode();
         return;
 
