@@ -124,7 +124,7 @@ function node(id, weight, time, next, down) {
 
 // new path function
 function path(new_path, total_cost, total_weight, down) {
-    this.path = new_path;
+    this.path = _.cloneDeep(new_path);
     this.total_cost = total_cost;
     this.total_weight = total_weight;
     this.down = down;
@@ -160,7 +160,7 @@ var tooltip = d3.select("body")
     .text("Text");
 
 
-d3.json("http://localhost:8000/test.json", function(error, graph) {
+d3.json("http://localhost:8000/Desktop/%E5%B0%88%E9%A1%8C/web/test.json", function(error, graph) {
     if (error) throw error;
 
     var link = svg.append("g")
@@ -315,7 +315,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                 if (isConnected(newPath, graph.nodes[i]) &&
                     !newPath.contains(graph.nodes[i])) {
                     // able to append node to path
-                    arguments.callee(poi_head, graph.nodes[i], threshold, newPath);
+                    genPath(poi_head, graph.nodes[i], threshold, newPath);
                 }
             }
 
