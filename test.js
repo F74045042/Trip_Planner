@@ -232,9 +232,8 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         .text(function(d) {
             return d.id;
         })
-        .attr("x", 15)
-        .attr("y", 0);
-
+        .attr("dx", 10)
+        .attr("dy", 0);
 
     simulation
         .nodes(graph.nodes)
@@ -258,10 +257,21 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                 return d.target.y;
             });
 
-        node
-            .attr("transform", function(d) {
-                return "translate(" + d.x + "," + d.y + ")";
+        circle
+            .attr("cx", function(d) {
+                return d.x;
             })
+            .attr("cy", function(d) {
+                return d.y;
+            });
+
+        label
+            .attr("x", function(d) {
+                return d.x;
+            })
+            .attr("y", function(d) {
+                return d.y;
+            });
     }
 
 
@@ -275,6 +285,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         poiIDX.addNode(graph.nodes[i].id, graph.nodes[i].weight, graph.nodes[i].time);
     }
 
+<<<<<<< HEAD
     // generate path starting from each node and store under poiIDX
     for (var idx = 0; idx < graph.nodes.length; idx++) {
         var newPath = new POIList();
@@ -283,6 +294,10 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     console.log(poiIDX);
 
+=======
+    var newPath = new POIList();
+    genPath(graph.nodes[1], 500, newPath, 1);
+>>>>>>> 5f03a21a373b279446d8b029148d01cd29d5bd96
 
 
 
@@ -341,7 +356,11 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         }
 
         // store path
+<<<<<<< HEAD
         poiIDX.addPath(newPath, newPath.getTotalCost(graph), newPath.getTotalWeight(graph), idx);
+=======
+        poiIDX.addPath(newPath, newPath.getTotalCost(graph), 200, idx);
+>>>>>>> 5f03a21a373b279446d8b029148d01cd29d5bd96
         newPath.popNode();
         return;
 
@@ -349,6 +368,25 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
 
 });
+
+//zoomable
+var zoom = d3.zoom()
+    .translateExtent([
+        [0, 0],
+        [width, height]
+    ])
+    .scaleExtent([1, 10])
+    .extent([
+        [0, 0],
+        [width, height]
+    ])
+    .on("zoom", function() {
+        console.log("s");
+        svg.selectAll("g").attr("transform", d3.event.transform);
+        svg.selectAll("line").attr("transform", d3.event.transform);
+    });
+
+svg.call(zoom);
 
 function dragstarted(d) {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
