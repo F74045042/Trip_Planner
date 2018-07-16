@@ -221,7 +221,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         .attr("dx", 10)
         .attr("dy", 0);
 
-
     simulation
         .nodes(graph.nodes)
         .on("tick", ticked);
@@ -342,6 +341,25 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
 
 });
+
+//zoomable
+var zoom = d3.zoom()
+    .translateExtent([
+        [0, 0],
+        [width, height]
+    ])
+    .scaleExtent([1, 10])
+    .extent([
+        [0, 0],
+        [width, height]
+    ])
+    .on("zoom", function() {
+        console.log("s");
+        svg.selectAll("g").attr("transform", d3.event.transform);
+        svg.selectAll("line").attr("transform", d3.event.transform);
+    });
+
+svg.call(zoom);
 
 function dragstarted(d) {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
