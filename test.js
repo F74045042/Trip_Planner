@@ -160,7 +160,7 @@ var tooltip = d3.select("body")
     .text("Text");
 
 
-d3.json("http://localhost:8000/Desktop/%E5%B0%88%E9%A1%8C/web/test.json", function(error, graph) {
+d3.json("http://localhost:8000/test.json", function(error, graph) {
     if (error) throw error;
 
     var link = svg.append("g")
@@ -218,8 +218,8 @@ d3.json("http://localhost:8000/Desktop/%E5%B0%88%E9%A1%8C/web/test.json", functi
         .text(function(d) {
             return d.id;
         })
-        .attr("x", 15)
-        .attr("y", 0);
+        .attr("dx", 10)
+        .attr("dy", 0);
 
 
     simulation
@@ -244,10 +244,21 @@ d3.json("http://localhost:8000/Desktop/%E5%B0%88%E9%A1%8C/web/test.json", functi
                 return d.target.y;
             });
 
-        node
-            .attr("transform", function(d) {
-                return "translate(" + d.x + "," + d.y + ")";
+        circle
+            .attr("cx", function(d) {
+                return d.x;
             })
+            .attr("cy", function(d) {
+                return d.y;
+            });
+
+        label
+            .attr("x", function(d) {
+                return d.x;
+            })
+            .attr("y", function(d) {
+                return d.y;
+            });
     }
 
 
