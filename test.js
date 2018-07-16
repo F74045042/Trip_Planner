@@ -1,4 +1,3 @@
-
 function POIList() {
     this.head = null;
 
@@ -103,7 +102,7 @@ function POIList() {
         let curr = this.head;
         var weight = 0;
 
-        while(curr.next) {
+        while (curr.next) {
             // add up weight at a poi node
             weight += curr.weight;
             curr = curr.next;
@@ -276,15 +275,15 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         poiIDX.addNode(graph.nodes[i].id, graph.nodes[i].weight, graph.nodes[i].time);
     }
 
-    var newPath = new POIList();
-    var idx = 1;
-    genPath(graph.nodes[idx], 500, newPath, idx);
+    // generate path starting from each node and store under poiIDX
+    for (var idx = 0; idx < graph.nodes.length; idx++) {
+        var newPath = new POIList();
+        genPath(graph.nodes[idx], 500, newPath, idx);
+    }
+
+    console.log(poiIDX);
 
 
-    console.log(poiIDX.nodeIDX(idx));
-
-
-    
 
 
 
@@ -347,7 +346,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         return;
 
     }
-
 
 
 });
