@@ -285,19 +285,13 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         poiIDX.addNode(graph.nodes[i].id, graph.nodes[i].weight, graph.nodes[i].time);
     }
 
-<<<<<<< HEAD
     // generate path starting from each node and store under poiIDX
     for (var idx = 0; idx < graph.nodes.length; idx++) {
         var newPath = new POIList();
         genPath(graph.nodes[idx], 500, newPath, idx);
     }
 
-    console.log(poiIDX);
 
-=======
-    var newPath = new POIList();
-    genPath(graph.nodes[1], 500, newPath, 1);
->>>>>>> 5f03a21a373b279446d8b029148d01cd29d5bd96
 
 
 
@@ -356,11 +350,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         }
 
         // store path
-<<<<<<< HEAD
         poiIDX.addPath(newPath, newPath.getTotalCost(graph), newPath.getTotalWeight(graph), idx);
-=======
-        poiIDX.addPath(newPath, newPath.getTotalCost(graph), 200, idx);
->>>>>>> 5f03a21a373b279446d8b029148d01cd29d5bd96
         newPath.popNode();
         return;
 
@@ -381,12 +371,13 @@ var zoom = d3.zoom()
         [width, height]
     ])
     .on("zoom", function() {
-        console.log("s");
         svg.selectAll("g").attr("transform", d3.event.transform);
         svg.selectAll("line").attr("transform", d3.event.transform);
     });
 
 svg.call(zoom);
+
+
 
 function dragstarted(d) {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
