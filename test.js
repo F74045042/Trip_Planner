@@ -1,7 +1,6 @@
 function POIList() {
     this.head = null;
 
-
     // --------------- member methods --------------- //
     // append poi node
     this.addNode = function(id, weight, time) {
@@ -291,12 +290,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         genPath(graph.nodes[idx], 500, newPath, idx);
     }
 
-
-
-
-
-
-
+    
+    // test: returns sorted path list of poiIDX[0] as array
+    console.log(sortByWeight(0));
 
 
 
@@ -354,6 +350,25 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         newPath.popNode();
         return;
 
+    }
+
+    // convert path objects list to array and sort by weight, then return the sorted array
+    function sortByWeight(headIDX) {
+        var head = poiIDX.nodeIDX(headIDX);
+        var sortArr = [];
+        let curr = head;
+
+        // push every path node into "sortArr"
+        while (curr.down) {
+            sortArr.push(curr.down);
+            curr = curr.down;
+        }
+
+        // sort by total weight
+        sortArr = sortArr.sort(function(a, b) {
+            return a.total_weight < b.total_weight ? 1 : -1;
+        });
+        return sortArr;
     }
 
 
