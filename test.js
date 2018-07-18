@@ -292,7 +292,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     
     // test: returns sorted path list of poiIDX[0] as array
-    console.log(sortByWeight(0));
+    console.log(sortByWeight(1));
 
 
 
