@@ -1,3 +1,5 @@
+var THRESHOLD = 400;
+
 function POIList() {
     this.head = null;
 
@@ -284,26 +286,12 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         poiIDX.addNode(graph.nodes[i].id, graph.nodes[i].weight, graph.nodes[i].time);
     }
 
-<<<<<<< HEAD
     // generate path starting from each node and store under poiIDX
     for (var idx = 0; idx < graph.nodes.length; idx++) {
         var newPath = new POIList();
-        genPath(graph.nodes[idx], 500, newPath, idx);
+        genPath(graph.nodes[idx], THRESHOLD, newPath, idx);
     }
-=======
-    var newPath = new POIList();
-    genPath(graph.nodes[1], 500, newPath, 1);
 
-    // console.log(poiIDX.nodeIDX(0));
-    // showPath(poiIDX.head.next.down.path);
-
-
-
->>>>>>> 094605608a27f630bbb3d5792b99c9ec96c95370
-
-    
-    // test: returns sorted path list of poiIDX[0] as array
-    console.log(sortByWeight(1));
 
 
 
@@ -375,7 +363,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     }
 
-<<<<<<< HEAD
+
     // convert path objects list to array and sort by weight, then return the sorted array
     function sortByWeight(headIDX) {
         var head = poiIDX.nodeIDX(headIDX);
@@ -393,7 +381,8 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             return a.total_weight < b.total_weight ? 1 : -1;
         });
         return sortArr;
-=======
+    }
+
     // Reduce the opacity of all node but the best path
     // can be optimize: each node save its own index, don't have to search all node over and over again.
     function showPath(path) {
@@ -419,8 +408,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                 getLine(d.__data__.id, curr.id).style.opacity = 1;
             }
         }
->>>>>>> 094605608a27f630bbb3d5792b99c9ec96c95370
+
     }
+
 
 
 });
