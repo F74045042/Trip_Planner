@@ -173,7 +173,7 @@ var tooltip = d3.select("body")
     .text("Text");
 
 
-d3.json("http://localhost:8000/test.json", function(error, graph) {
+d3.json("http://127.0.0.1:8000/Desktop/Trip_Planner-single_itinerary/test.json", function(error, graph) {
     if (error) throw error;
 
     var link = svg.append("g")
@@ -287,18 +287,27 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     // generate path starting from each node and store under poiIDX
     for (var idx = 0; idx < graph.nodes.length; idx++) {
         var newPath = new POIList();
-        genPath(graph.nodes[idx], 500, newPath, idx);
+        genPath(graph.nodes[idx], 250, newPath, idx);
     }
 
     
     // test: returns sorted path list of poiIDX[0] as array
-    console.log(sortByWeight(0));
+    
+    //console.log(sortByWeight(1));
+
+    // generating all path array
+    //console.log(genAllPathArr()); 
 
 
+    //getting path from chosen weight
+    var max = getMaxWeight(genAllPathArr());
 
+    var Arr = [];
+    var ReArr = [];
+    Arr = getPathofMaxWeight(max);
+    console.log(Arr);
 
-
-
+    genMultiItinerary(Arr[0]);
 
     // ----------------------------------------------------------------- //
 
@@ -369,6 +378,143 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             return a.total_weight < b.total_weight ? 1 : -1;
         });
         return sortArr;
+    }
+
+    // using sortbyweight function to construct allpatharray
+    function genAllPathArr(){
+        var pathArr = [];
+
+        //2-d array generating
+        for (var idx = 0 ; idx < 12 ; idx++){
+            pathArr [idx] = sortByWeight(idx);
+        }
+        return pathArr;
+    } 
+
+    //
+    function genMultiItinerary(Arr){
+        ReArr = remain(Arr);
+        ReMax = getMaxWeight2(ReArr);
+        console.log(ReArr);
+        getPathofMaxWeight2(ReMax,ReArr);
+    }
+
+    //getting the max weight of all path with 2-D array
+    function getMaxWeight(AllPathArr){
+        var pathArr = [];
+        var length = AllPathArr.length;
+        var weightArr = [];
+        var totweightArr = [];
+
+        //generating pure weight array for max function
+        for (var i = 0 ; i < length ; i++){           
+            for (var j = 0 ; j < AllPathArr[i].length ; j++){
+            weightArr[j] = AllPathArr[i][j].total_weight;
+        }
+        totweightArr[i] = weightArr;
+        weightArr = [];
+        }
+
+        //getting the max of 2-D array
+
+        //first get the max of row 
+        var maxRow = totweightArr.map(function(row){ return Math.max.apply(Math, row); });
+        //overall max value
+        var max = Math.max.apply(null, maxRow);
+        return max;
+    }
+	
+	//getting the max weight of all path with 2-D array
+    function getMaxWeight2(ReArr){
+        var pathArr = [];
+        var length = ReArr.length;
+        var weightArr = [];
+
+        //generating pure weight array for max function
+        for (var i = 0 ; i < length ; i++){           
+            weightArr[i] = ReArr[i].total_weight;
+        }
+
+        //overall max value
+        var max = Math.max.apply(null, weightArr);
+        return max;
+    }
+
+	//get path of max weight (2-D array)
+    function getPathofMaxWeight(max){
+        var AllPathArr = [];
+        AllPathArr = genAllPathArr();
+        var MaxArr = [];
+        var PathArr = [];
+        var PathArrnum = 0;
+        var MaxArrnum = 0;
+        for (var i = 0 ; i < AllPathArr.length ; i++){
+            for (var j = 0 ; j < AllPathArr[i].length ; j++){
+                if (AllPathArr[i][j].total_weight == max){  
+                    var curr = AllPathArr[i][j].path.head;
+                    while(curr){
+                        PathArr[PathArrnum] = curr.id;
+                        curr = curr.next;
+                        PathArrnum++;
+                    }
+                    MaxArr[MaxArrnum] = PathArr;
+                    PathArr = [];
+                    MaxArrnum++; 
+                    PathArrnum = 0;
+                }
+            }
+        }
+        return MaxArr;
+    }
+
+	//get path of max weight (1-D array)
+    function getPathofMaxWeight2(ReMax,ReArr){
+        var AllPathArr = [];
+        AllPathArr = genAllPathArr();
+        var ReMaxArr = [];
+        var PathArr = [];
+        var PathArrnum = 0;
+        var MaxArrnum = 0;
+        for (var i = 0 ; i < ReArr.length ; i++){
+            if  (ReArr[i].total_weight == ReMax){  
+                    var curr = ReArr[i].path.head;
+                    while(curr){
+                        PathArr[PathArrnum] = curr.id;
+                        curr = curr.next;
+                        PathArrnum++;
+                    }
+                    ReMaxArr[MaxArrnum] = PathArr;
+                    PathArr = [];
+                    MaxArrnum++; 
+                    PathArrnum = 0;
+            }
+        }
+        console.log(ReMaxArr);
+        return ReMaxArr;
+    }
+
+    //eliminate the duplicate node from all path
+    function remain(MaxArr){
+        console.log(MaxArr);
+        AllPathArr = genAllPathArr();
+        var RemainArr = [];
+        var count = 0;
+        for(var i = 0 ; i < AllPathArr.length ; i++){
+            for (var j = 0 ; j < AllPathArr[i].length ; j++){
+                var curr = AllPathArr[i][j].path.head;
+                while(curr){
+                    if (MaxArr.indexOf(curr.id)==-1){
+                        curr = curr.next;
+                    }
+                    else{break;}
+                }
+                if(curr === null){
+                    RemainArr[count] = AllPathArr[i][j];
+                    count++;
+                }
+            }
+        }
+        return RemainArr;
     }
 
 
