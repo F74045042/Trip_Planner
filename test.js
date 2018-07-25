@@ -302,8 +302,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     var newPath = new POIList();
     genPath(graph.nodes[1], 500, newPath, 1);
 
-    // console.log(poiIDX.nodeIDX(0));
-    showPath(poiIDX.head.next.down.path);
 
 
 
