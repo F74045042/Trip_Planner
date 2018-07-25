@@ -94,7 +94,16 @@
     {"source": "P", "target": "T", "cost": 5},
     {"source": "C", "target": "U", "cost": 10},
     {"source": "D", "target": "U", "cost": 15},
-    {"source": "A", "target": "U", "cost": 5}
+    {"source": "A", "target": "U", "cost": 5},
+    {"source": "C", "target": "V", "cost": 10},
+    {"source": "Z", "target": "V", "cost": 15},
+    {"source": "Q", "target": "V", "cost": 5},
+    {"source": "Y", "target": "X", "cost": 10},
+    {"source": "Z", "target": "X", "cost": 15},
+    {"source": "I", "target": "X", "cost": 5},
+    {"source": "B", "target": "W", "cost": 10},
+    {"source": "Q", "target": "W", "cost": 15},
+    {"source": "Y", "target": "W", "cost": 5}
 
 ]
 
