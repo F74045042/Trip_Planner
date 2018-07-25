@@ -1,110 +1,540 @@
 {
-  "nodes": [
-    {"id": "A", "weight": 3, "time": 120, "type": "tourist_attraction"},
-    {"id": "B", "weight": 4, "time": 40, "type": "tourist_attraction"},
-    {"id": "C", "weight": 3, "time": 45, "type": "tourist_attraction"},
-    {"id": "D", "weight": 4, "time": 60, "type": "tourist_attraction"},
-    {"id": "E", "weight": 5, "time": 120, "type": "tourist_attraction"},
-    {"id": "F", "weight": 8, "time": 30, "type": "tourist_attraction"},
-    {"id": "G", "weight": 9, "time": 30, "type": "tourist_attraction"},
-    {"id": "H", "weight": 6, "time": 65, "type": "tourist_attraction"},
-    {"id": "I", "weight": 11, "time": 50, "type": "tourist_attraction"},
-    {"id": "J", "weight": 2, "time": 70, "type": "tourist_attraction"},
-    {"id": "K", "weight": 10, "time": 35, "type": "tourist_attraction"},
-    {"id": "L", "weight": 9, "time": 50, "type": "tourist_attraction"}, 
-    {"id": "M", "weight": 7, "time": 45, "type": "restaurant"},
-    {"id": "N", "weight": 3, "time": 70, "type": "restaurant"}, 
-    {"id": "O", "weight": 6, "time": 50, "type": "restaurant"},
-    {"id": "P", "weight": 10, "time": 40, "type": "restaurant"},
-    {"id": "Q", "weight": 9, "time": 30, "type": "restaurant"},
-    {"id": "R", "weight": 5, "time": 65, "type": "restaurant"},
-    {"id": "S", "weight": 8, "time": 0, "type": "hotel"},
-    {"id": "T", "weight": 4, "time": 0, "type": "hotel"},
-    {"id": "U", "weight": 10, "time": 0, "type": "hotel"},
-    {"id": "V", "weight": 6, "time": 0, "type": "hotel"},
-    {"id": "W", "weight": 8, "time": 0, "type": "hotel"},
-    {"id": "X", "weight": 3, "time": 0, "type": "hotel"},
-    {"id": "Y", "weight": 8, "time": 90, "type": "tourist_attraction"},
-    {"id": "Z", "weight": 12, "time": 110, "type": "tourist_attraction"}
+    "nodes": [
+        {
+            "id": "A",
+            "weight": 3,
+            "time": 120,
+            "type": "tourist_attraction"
+        },
+        {
+            "id": "B",
+            "weight": 4,
+            "time": 40,
+            "type": "tourist_attraction"
+        },
+        {
+            "id": "C",
+            "weight": 3,
+            "time": 45,
+            "type": "tourist_attraction"
+        },
+        {
+            "id": "D",
+            "weight": 4,
+            "time": 60,
+            "type": "tourist_attraction"
+        },
+        {
+            "id": "E",
+            "weight": 5,
+            "time": 120,
+            "type": "tourist_attraction"
+        },
+        {
+            "id": "F",
+            "weight": 8,
+            "time": 30,
+            "type": "tourist_attraction"
+        },
+        {
+            "id": "G",
+            "weight": 9,
+            "time": 30,
+            "type": "tourist_attraction"
+        },
+        {
+            "id": "H",
+            "weight": 6,
+            "time": 65,
+            "type": "tourist_attraction"
+        },
+        {
+            "id": "I",
+            "weight": 11,
+            "time": 50,
+            "type": "tourist_attraction"
+        },
+        {
+            "id": "J",
+            "weight": 2,
+            "time": 70,
+            "type": "tourist_attraction"
+        },
+        {
+            "id": "K",
+            "weight": 10,
+            "time": 35,
+            "type": "tourist_attraction"
+        },
+        {
+            "id": "L",
+            "weight": 9,
+            "time": 50,
+            "type": "tourist_attraction"
+        },
+        {
+            "id": "M",
+            "weight": 7,
+            "time": 45,
+            "type": "restaurant"
+        },
+        {
+            "id": "N",
+            "weight": 3,
+            "time": 70,
+            "type": "restaurant"
+        },
+        {
+            "id": "O",
+            "weight": 6,
+            "time": 50,
+            "type": "restaurant"
+        },
+        {
+            "id": "P",
+            "weight": 10,
+            "time": 40,
+            "type": "restaurant"
+        },
+        {
+            "id": "Q",
+            "weight": 9,
+            "time": 30,
+            "type": "restaurant"
+        },
+        {
+            "id": "R",
+            "weight": 5,
+            "time": 65,
+            "type": "restaurant"
+        },
+        {
+            "id": "S",
+            "weight": 8,
+            "time": 0,
+            "type": "hotel"
+        },
+        {
+            "id": "T",
+            "weight": 4,
+            "time": 0,
+            "type": "hotel"
+        },
+        {
+            "id": "U",
+            "weight": 10,
+            "time": 0,
+            "type": "hotel"
+        },
+        {
+            "id": "V",
+            "weight": 6,
+            "time": 0,
+            "type": "hotel"
+        },
+        {
+            "id": "W",
+            "weight": 8,
+            "time": 0,
+            "type": "hotel"
+        },
+        {
+            "id": "X",
+            "weight": 3,
+            "time": 0,
+            "type": "hotel"
+        },
+        {
+            "id": "Y",
+            "weight": 8,
+            "time": 90,
+            "type": "tourist_attraction"
+        },
+        {
+            "id": "Z",
+            "weight": 12,
+            "time": 110,
+            "type": "tourist_attraction"
+        }
 
-],
-  "links": [
-    {"source": "A", "target": "B", "cost": 30},
-    {"source": "A", "target": "D", "cost": 20},
-    {"source": "A", "target": "E", "cost": 15},
-    {"source": "B", "target": "C", "cost": 75},
-    {"source": "D", "target": "F", "cost": 60},
-    {"source": "D", "target": "B", "cost": 15},
-    {"source": "B", "target": "E", "cost": 25},
-    {"source": "C", "target": "D", "cost": 40},
-    {"source": "C", "target": "F", "cost": 60},
-    {"source": "E", "target": "F", "cost": 20},
-    {"source": "F", "target": "B", "cost": 5},
-    {"source": "F", "target": "G", "cost": 45},
-    {"source": "F", "target": "H", "cost": 10},
-    {"source": "F", "target": "J", "cost": 20},
-    {"source": "F", "target": "L", "cost": 30},
-    {"source": "G", "target": "A", "cost": 85},
-    {"source": "G", "target": "B", "cost": 90},
-    {"source": "G", "target": "C", "cost": 75},
-    {"source": "G", "target": "D", "cost": 70},
-    {"source": "G", "target": "E", "cost": 30},
-    {"source": "G", "target": "H", "cost": 10},
-    {"source": "G", "target": "I", "cost": 20},
-    {"source": "G", "target": "J", "cost": 30},
-    {"source": "G", "target": "K", "cost": 15},
-    {"source": "G", "target": "L", "cost": 5},
-    {"source": "H", "target": "B", "cost": 100},
-    {"source": "H", "target": "D", "cost": 90},
-    {"source": "H", "target": "I", "cost": 35},
-    {"source": "H", "target": "J", "cost": 25},
-    {"source": "H", "target": "K", "cost": 20},
-    {"source": "H", "target": "L", "cost": 20},
-    {"source": "I", "target": "J", "cost": 10},
-    {"source": "I", "target": "K", "cost": 15},
-    {"source": "I", "target": "L", "cost": 10},
-    {"source": "K", "target": "L", "cost": 20},
-    {"source": "C", "target": "Y", "cost": 20},
-    {"source": "C", "target": "Z", "cost": 30},
-    {"source": "Z", "target": "A", "cost": 10},
-    {"source": "Z", "target": "P", "cost": 15},
-    {"source": "Y", "target": "E", "cost": 35},
-    {"source": "Y", "target": "J", "cost": 60},
-    {"source": "M", "target": "I", "cost": 10},
-    {"source": "M", "target": "K", "cost": 5},
-    {"source": "M", "target": "L", "cost": 10},
-    {"source": "N", "target": "Z", "cost": 15},
-    {"source": "N", "target": "P", "cost": 5},
-    {"source": "N", "target": "B", "cost": 35},
-    {"source": "O", "target": "E", "cost": 10},
-    {"source": "O", "target": "F", "cost": 15},
-    {"source": "O", "target": "M", "cost": 5},
-    {"source": "P", "target": "B", "cost": 20},
-    {"source": "P", "target": "E", "cost": 20},
-    {"source": "Q", "target": "C", "cost": 10},
-    {"source": "Q", "target": "L", "cost": 10},
-    {"source": "R", "target": "Z", "cost": 30},
-    {"source": "R", "target": "G", "cost": 10},
-    {"source": "R", "target": "H", "cost": 15},
-    {"source": "E", "target": "S", "cost": 5},
-    {"source": "F", "target": "S", "cost": 10},
-    {"source": "M", "target": "S", "cost": 5},
-    {"source": "D", "target": "T", "cost": 10},
-    {"source": "B", "target": "T", "cost": 15},
-    {"source": "P", "target": "T", "cost": 5},
-    {"source": "C", "target": "U", "cost": 10},
-    {"source": "D", "target": "U", "cost": 15},
-    {"source": "A", "target": "U", "cost": 5},
-    {"source": "C", "target": "V", "cost": 10},
-    {"source": "Z", "target": "V", "cost": 15},
-    {"source": "Q", "target": "V", "cost": 5},
-    {"source": "Y", "target": "X", "cost": 10},
-    {"source": "Z", "target": "X", "cost": 15},
-    {"source": "I", "target": "X", "cost": 5},
-    {"source": "B", "target": "W", "cost": 10},
-    {"source": "Q", "target": "W", "cost": 15},
-    {"source": "Y", "target": "W", "cost": 5}
+    ],
+    "links": [
+        {
+            "source": "A",
+            "target": "B",
+            "cost": 30
+        },
+        {
+            "source": "A",
+            "target": "D",
+            "cost": 20
+        },
+        {
+            "source": "A",
+            "target": "E",
+            "cost": 15
+        },
+        {
+            "source": "B",
+            "target": "C",
+            "cost": 75
+        },
+        {
+            "source": "D",
+            "target": "F",
+            "cost": 60
+        },
+        {
+            "source": "D",
+            "target": "B",
+            "cost": 15
+        },
+        {
+            "source": "B",
+            "target": "E",
+            "cost": 25
+        },
+        {
+            "source": "C",
+            "target": "D",
+            "cost": 40
+        },
+        {
+            "source": "C",
+            "target": "F",
+            "cost": 60
+        },
+        {
+            "source": "E",
+            "target": "F",
+            "cost": 20
+        },
+        {
+            "source": "F",
+            "target": "B",
+            "cost": 5
+        },
+        {
+            "source": "F",
+            "target": "G",
+            "cost": 45
+        },
+        {
+            "source": "F",
+            "target": "H",
+            "cost": 10
+        },
+        {
+            "source": "F",
+            "target": "J",
+            "cost": 20
+        },
+        {
+            "source": "F",
+            "target": "L",
+            "cost": 30
+        },
+        {
+            "source": "G",
+            "target": "A",
+            "cost": 85
+        },
+        {
+            "source": "G",
+            "target": "B",
+            "cost": 90
+        },
+        {
+            "source": "G",
+            "target": "C",
+            "cost": 75
+        },
+        {
+            "source": "G",
+            "target": "D",
+            "cost": 70
+        },
+        {
+            "source": "G",
+            "target": "E",
+            "cost": 30
+        },
+        {
+            "source": "G",
+            "target": "H",
+            "cost": 10
+        },
+        {
+            "source": "G",
+            "target": "I",
+            "cost": 20
+        },
+        {
+            "source": "G",
+            "target": "J",
+            "cost": 30
+        },
+        {
+            "source": "G",
+            "target": "K",
+            "cost": 15
+        },
+        {
+            "source": "G",
+            "target": "L",
+            "cost": 5
+        },
+        {
+            "source": "H",
+            "target": "B",
+            "cost": 100
+        },
+        {
+            "source": "H",
+            "target": "D",
+            "cost": 90
+        },
+        {
+            "source": "H",
+            "target": "I",
+            "cost": 35
+        },
+        {
+            "source": "H",
+            "target": "J",
+            "cost": 25
+        },
+        {
+            "source": "H",
+            "target": "K",
+            "cost": 20
+        },
+        {
+            "source": "H",
+            "target": "L",
+            "cost": 20
+        },
+        {
+            "source": "I",
+            "target": "J",
+            "cost": 10
+        },
+        {
+            "source": "I",
+            "target": "K",
+            "cost": 15
+        },
+        {
+            "source": "I",
+            "target": "L",
+            "cost": 10
+        },
+        {
+            "source": "K",
+            "target": "L",
+            "cost": 20
+        },
+        {
+            "source": "C",
+            "target": "Y",
+            "cost": 20
+        },
+        {
+            "source": "C",
+            "target": "Z",
+            "cost": 30
+        },
+        {
+            "source": "Z",
+            "target": "A",
+            "cost": 10
+        },
+        {
+            "source": "Z",
+            "target": "P",
+            "cost": 15
+        },
+        {
+            "source": "Y",
+            "target": "E",
+            "cost": 35
+        },
+        {
+            "source": "Y",
+            "target": "J",
+            "cost": 60
+        },
+        {
+            "source": "M",
+            "target": "I",
+            "cost": 10
+        },
+        {
+            "source": "M",
+            "target": "K",
+            "cost": 5
+        },
+        {
+            "source": "M",
+            "target": "L",
+            "cost": 10
+        },
+        {
+            "source": "N",
+            "target": "Z",
+            "cost": 15
+        },
+        {
+            "source": "N",
+            "target": "P",
+            "cost": 5
+        },
+        {
+            "source": "N",
+            "target": "B",
+            "cost": 35
+        },
+        {
+            "source": "O",
+            "target": "E",
+            "cost": 10
+        },
+        {
+            "source": "O",
+            "target": "F",
+            "cost": 15
+        },
+        {
+            "source": "O",
+            "target": "M",
+            "cost": 5
+        },
+        {
+            "source": "P",
+            "target": "B",
+            "cost": 20
+        },
+        {
+            "source": "P",
+            "target": "E",
+            "cost": 20
+        },
+        {
+            "source": "Q",
+            "target": "C",
+            "cost": 10
+        },
+        {
+            "source": "Q",
+            "target": "L",
+            "cost": 10
+        },
+        {
+            "source": "R",
+            "target": "Z",
+            "cost": 30
+        },
+        {
+            "source": "R",
+            "target": "G",
+            "cost": 10
+        },
+        {
+            "source": "R",
+            "target": "H",
+            "cost": 15
+        },
+        {
+            "source": "E",
+            "target": "S",
+            "cost": 5
+        },
+        {
+            "source": "F",
+            "target": "S",
+            "cost": 10
+        },
+        {
+            "source": "M",
+            "target": "S",
+            "cost": 5
+        },
+        {
+            "source": "D",
+            "target": "T",
+            "cost": 10
+        },
+        {
+            "source": "B",
+            "target": "T",
+            "cost": 15
+        },
+        {
+            "source": "P",
+            "target": "T",
+            "cost": 5
+        },
+        {
+            "source": "C",
+            "target": "U",
+            "cost": 10
+        },
+        {
+            "source": "D",
+            "target": "U",
+            "cost": 15
+        },
+        {
+            "source": "A",
+            "target": "U",
+            "cost": 5
+        },
+        {
+            "source": "C",
+            "target": "V",
+            "cost": 10
+        },
+        {
+            "source": "Z",
+            "target": "V",
+            "cost": 15
+        },
+        {
+            "source": "Q",
+            "target": "V",
+            "cost": 5
+        },
+        {
+            "source": "Y",
+            "target": "X",
+            "cost": 10
+        },
+        {
+            "source": "Z",
+            "target": "X",
+            "cost": 15
+        },
+        {
+            "source": "I",
+            "target": "X",
+            "cost": 5
+        },
+        {
+            "source": "B",
+            "target": "W",
+            "cost": 10
+        },
+        {
+            "source": "Q",
+            "target": "W",
+            "cost": 15
+        },
+        {
+            "source": "Y",
+            "target": "W",
+            "cost": 5
+        }
 
-]
+    ]
 
 }
