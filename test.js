@@ -415,7 +415,7 @@ var zoom = d3.zoom()
         [0, 0],
         [width, height]
     ])
-    .scaleExtent([1, 10])
+    .scaleExtent([1, 2])
     .extent([
         [0, 0],
         [width, height]
