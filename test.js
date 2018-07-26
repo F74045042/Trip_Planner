@@ -1,5 +1,6 @@
 function POIList() {
     this.head = null;
+    this.length = 0;
 
 
     // --------------- member methods --------------- //
@@ -17,6 +18,7 @@ function POIList() {
             }
             curr.next = newNode;
         }
+        this.length++;
 
     }
 
@@ -52,6 +54,7 @@ function POIList() {
                 prev.next = curr.next; //delete curr (last node)
             }
         }
+        this.length--;
     }
 
     // check if path contains node
@@ -82,14 +85,13 @@ function POIList() {
             for (var i = 0; i < graph.nodes.length; i++) {
                 if ((graph.links[i].source.id == curr.id && graph.links[i].target.id == curr.next.id) ||
                     (graph.links[i].target.id == curr.id && graph.links[i].source.id == curr.next.id)) {
-                    link_cost = graph.links[i].cost;
+                    cost += graph.links[i].cost;
                     // console.log( "link between " + graph.links[i].source.id 
                     //     + " & " + graph.links[i].target.id 
                     //     + " link_cost = " + link_cost);
                     break;
                 }
             }
-            cost += link_cost;
             curr = curr.next;
         }
         // last node: simply add up its avg. stay time
@@ -183,13 +185,13 @@ var opts = {
     position: 'absolute' // Element positioning
 };
 
-//var spinner = new Spinner(opts).spin(target);
+var spinner = new Spinner(opts).spin(target);
 
 d3.json("http://localhost:8000/test.json", function(error, graph) {
     if (error) throw error;
 
-    // stop the loader
-//    spinner.stop();
+    // stop loader
+    spinner.stop();
 
     var link = svg.append("g")
         .attr("class", "links")
@@ -296,16 +298,15 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     // poi index
     for (var i = 0; i < graph.nodes.length; i++) {
-        poiIDX.addNode(graph.nodes[i].id, graph.nodes[i].weight, graph.nodes[i].time);
+        if (graph.nodes[i].type === "tourist_attraction")
+            poiIDX.addNode(graph.nodes[i].id, graph.nodes[i].weight, graph.nodes[i].time);
     }
 
-    var newPath = new POIList();
-    genPath(graph.nodes[1], 500, newPath, 1);
-
-
-
-
-
+    // generate path starting from each node and store under poiIDX
+    for (var idx = 0; idx < poiIDX.length; idx++) {
+        var newPath = new POIList();
+        genPath(poiIDX.nodeIDX(idx), 200, newPath, idx);
+    }
 
 
 
@@ -353,6 +354,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     }
 
     // generate all path with total_cost(link.cost + node.time) under a given threshold from a certain start point  
+    // only consider nodes that are of type "tourist_attraction"
     function genPath(node, threshold, newPath, idx) {
 
         // append to path
@@ -362,7 +364,8 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         if (threshold > tot_cost) {
             for (let i = 0; i < graph.nodes.length; i++) {
                 if (isConnected(newPath, graph.nodes[i]) &&
-                    !newPath.contains(graph.nodes[i])) {
+                    !newPath.contains(graph.nodes[i]) &&
+                    graph.nodes[i].type === "tourist_attraction") {
                     // able to append node to path
                     genPath(graph.nodes[i], threshold, newPath, idx);
                 }
@@ -392,6 +395,140 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                     console.log(curr.id);
                     d.style.opacity = 1;
                     break;
+                }
+            }
+            // console.log(curr);
+            // console.log(d);
+            curr = curr.next;
+            //change line opacity
+            if (curr) {
+                getLine(d.__data__.id, curr.id).style.opacity = 1;
+            }
+        }
+    }
+
+    // convert path objects list to array and sort by weight, then return the sorted array
+    function sortByWeight(headIDX) {
+        var head = poiIDX.nodeIDX(headIDX);
+        var sortArr = [];
+        let curr = head;
+
+        // push every path node into "sortArr"
+        while (curr.down) {
+            sortArr.push(curr.down);
+            curr = curr.down;
+        }
+
+        // sort by total weight
+        sortArr = sortArr.sort(function(a, b) {
+            return a.total_weight < b.total_weight ? 1 : -1;
+        });
+        return sortArr;
+    }
+
+    // using sortbyweight function to construct allpatharray
+    function genAllPathArr() {
+        var pathArr = [];
+
+        //2-d array generating
+        for (var idx = 0; idx < poiIDX.length; idx++) {
+            pathArr[idx] = sortByWeight(idx);
+        }
+        return pathArr;
+    }
+
+
+    function genMultiItinerary(Arr) {
+        ReArr = remain(Arr);
+        ReMax = getMaxWeight2(ReArr);
+        console.log(ReArr);
+        getPathofMaxWeight2(ReMax, ReArr);
+    }
+
+    //getting the max weight of all path with 2-D array
+    function getMaxWeight(AllPathArr) {
+        var pathArr = [];
+        var length = AllPathArr.length;
+        var weightArr = [];
+        var totweightArr = [];
+
+        //generating pure weight array for max function
+        for (var i = 0; i < length; i++) {
+            for (var j = 0; j < AllPathArr[i].length; j++) {
+                weightArr[j] = AllPathArr[i][j].total_weight;
+            }
+            totweightArr[i] = weightArr;
+            weightArr = [];
+        }
+
+        //getting the max of 2-D array
+
+        //first get the max of row 
+        var maxRow = totweightArr.map(function(row) {
+            return Math.max.apply(Math, row); });
+        //overall max value
+        var max = Math.max.apply(null, maxRow);
+        return max;
+    }
+
+    //getting the max weight of all path with 2-D array
+    function getMaxWeight2(ReArr) {
+        var pathArr = [];
+        var length = ReArr.length;
+        var weightArr = [];
+
+        //generating pure weight array for max function
+        for (var i = 0; i < length; i++) {
+            weightArr[i] = ReArr[i].total_weight;
+        }
+
+        //overall max value
+        var max = Math.max.apply(null, weightArr);
+        return max;
+    }
+
+    //get path of max weight (2-D array)
+    function getPathofMaxWeight(max) {
+        var AllPathArr = [];
+        AllPathArr = genAllPathArr();
+        var MaxArr = [];
+        var PathArr = [];
+        var PathArrnum = 0;
+        var MaxArrnum = 0;
+        for (var i = 0; i < AllPathArr.length; i++) {
+            for (var j = 0; j < AllPathArr[i].length; j++) {
+                if (AllPathArr[i][j].total_weight == max) {
+                    var curr = AllPathArr[i][j].path.head;
+                    while (curr) {
+                        PathArr[PathArrnum] = curr.id;
+                        curr = curr.next;
+                        PathArrnum++;
+                    }
+                    MaxArr[MaxArrnum] = PathArr;
+                    PathArr = [];
+                    MaxArrnum++;
+                    PathArrnum = 0;
+                }
+            }
+        }
+        return MaxArr;
+    }
+
+    //get path of max weight (1-D array)
+    function getPathofMaxWeight2(ReMax, ReArr) {
+        var AllPathArr = [];
+        AllPathArr = genAllPathArr();
+        var ReMaxArr = [];
+        var PathArr = [];
+        var PathArrnum = 0;
+        var MaxArrnum = 0;
+        for (var i = 0; i < ReArr.length; i++) {
+            if (ReArr[i].total_weight == ReMax) {
+                var curr = ReArr[i].path.head;
+                while (curr) {
+                    PathArr[PathArrnum] = curr.id;
+                    curr = curr.next;
+                    PathArrnum++;
                 }
             }
             // console.log(curr);
