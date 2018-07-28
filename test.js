@@ -323,11 +323,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     }
 
 
-
-    // generating all path array
-    //console.log(genAllPathArr()); 
-
-
     //getting path from chosen weight
     var max = getMaxWeight(genAllPathArr());
 
@@ -337,6 +332,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     console.log(Arr);
 
     genMultiItinerary(Arr[0]);
+
 
     // ----------------------------------------------------------------- //
 
