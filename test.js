@@ -2,7 +2,6 @@ function POIList() {
     this.head = null;
     this.length = 0;
 
-
     // --------------- member methods --------------- //
     // append poi node
     this.addNode = function(id, weight, time) {
@@ -99,6 +98,20 @@ function POIList() {
         return cost;
     }
 
+    // get total weight (for sorting by path importance)
+    this.getTotalWeight = function(graph) {
+        let curr = this.head;
+        var weight = 0;
+
+        while (curr.next) {
+            // add up weight at a poi node
+            weight += curr.weight;
+            curr = curr.next;
+        }
+
+        return weight;
+    }
+
     // check empty
     this.isEmpty = function() {
         return (this.head == null);
@@ -115,7 +128,7 @@ function POIList() {
 
 }
 
-// new node function
+// new node constructor
 function node(id, weight, time, next, down) {
     this.id = id;
     this.weight = weight;
@@ -124,7 +137,7 @@ function node(id, weight, time, next, down) {
     this.down = down;
 }
 
-// new path function
+// new path constructor
 function path(new_path, total_cost, total_weight, down) {
     this.path = _.cloneDeep(new_path);
     this.total_cost = total_cost;
@@ -160,6 +173,7 @@ var tooltip = d3.select("body")
     .style("z-index", "10")
     .style("visibility", "hidden")
     .text("Text");
+
 
 // Loader
 var target = document.getElementById('loader');
@@ -310,9 +324,19 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
 
 
+    // generating all path array
+    //console.log(genAllPathArr()); 
 
 
+    //getting path from chosen weight
+    var max = getMaxWeight(genAllPathArr());
 
+    var Arr = [];
+    var ReArr = [];
+    Arr = getPathofMaxWeight(max);
+    console.log(Arr);
+
+    genMultiItinerary(Arr[0]);
 
     // ----------------------------------------------------------------- //
 
@@ -320,7 +344,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
 
 
-    // ----------------------- self-defined functions -------------------- //
+    // ----------------------- self-defined graph functions -------------------- //
 
     // get the value of each element from the form in planning.html
     function getValue() {
@@ -368,7 +392,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         var tot_cost = newPath.getTotalCost(graph);
 
         if (threshold > tot_cost) {
-            for (let i = 0; i < graph.nodes.length; i++) {
+            for (var i = 0; i < graph.nodes.length; i++) {
                 if (isConnected(newPath, graph.nodes[i]) &&
                     !newPath.contains(graph.nodes[i]) &&
                     graph.nodes[i].type === "tourist_attraction") {
@@ -380,7 +404,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         }
 
         // store path
-        poiIDX.addPath(newPath, newPath.getTotalCost(graph), 200, idx);
+        poiIDX.addPath(newPath, newPath.getTotalCost(graph), newPath.getTotalWeight(graph), idx);
         newPath.popNode();
         return;
 
@@ -473,6 +497,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         var maxRow = totweightArr.map(function(row) {
             return Math.max.apply(Math, row);
         });
+        
         //overall max value
         var max = Math.max.apply(null, maxRow);
         return max;
@@ -537,15 +562,37 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                     curr = curr.next;
                     PathArrnum++;
                 }
-            }
-            // console.log(curr);
-            // console.log(d);
-            curr = curr.next;
-            //change line opacity
-            if (curr) {
-                getLine(d.__data__.id, curr.id).style.opacity = 1;
+                ReMaxArr[MaxArrnum] = PathArr;
+                PathArr = [];
+                MaxArrnum++;
+                PathArrnum = 0;
             }
         }
+        console.log(ReMaxArr);
+        return ReMaxArr;
+    }
+
+    //eliminate the duplicate node from all path
+    function remain(MaxArr) {
+        console.log(MaxArr);
+        AllPathArr = genAllPathArr();
+        var RemainArr = [];
+        var count = 0;
+        for (var i = 0; i < AllPathArr.length; i++) {
+            for (var j = 0; j < AllPathArr[i].length; j++) {
+                var curr = AllPathArr[i][j].path.head;
+                while (curr) {
+                    if (MaxArr.indexOf(curr.id) == -1) {
+                        curr = curr.next;
+                    } else { break; }
+                }
+                if (curr === null) {
+                    RemainArr[count] = AllPathArr[i][j];
+                    count++;
+                }
+            }
+        }
+        return RemainArr;
     }
 
 
@@ -557,7 +604,7 @@ var zoom = d3.zoom()
         [0, 0],
         [width, height]
     ])
-    .scaleExtent([1, 2])
+    .scaleExtent([1, 10])
     .extent([
         [0, 0],
         [width, height]
@@ -568,6 +615,8 @@ var zoom = d3.zoom()
     });
 
 svg.call(zoom);
+
+
 
 function dragstarted(d) {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
