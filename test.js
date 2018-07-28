@@ -201,7 +201,7 @@ var opts = {
 
 var spinner = new Spinner(opts).spin(target);
 
-d3.json("http://127.0.0.1:8000/Desktop/Trip_Planner-RouteList/test.json", function(error, graph) {
+d3.json("http://localhost:8000/test.json", function(error, graph) {
     if (error) throw error;
 
     // stop loader
