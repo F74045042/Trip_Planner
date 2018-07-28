@@ -322,6 +322,12 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     // ----------------------- self-defined functions -------------------- //
 
+    // get the value of each element from the form in planning.html
+    function getValue() {
+        var x = document.getElementById("frm");
+        console.log(x.elements[0].value);
+    }
+
     // check if a node is connected to the last poi in a path
     function isConnected(path, node) {
         // iterate to last node in path
@@ -465,7 +471,8 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
         //first get the max of row 
         var maxRow = totweightArr.map(function(row) {
-            return Math.max.apply(Math, row); });
+            return Math.max.apply(Math, row);
+        });
         //overall max value
         var max = Math.max.apply(null, maxRow);
         return max;

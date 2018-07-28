@@ -27,14 +27,14 @@
                 <img src="./Logo.png" width="150" height="40" class="d-inline-block align-top" alt="">
                 <!-- Input -->
                 <div class="col-5">
-                    <div class="input-group">
+                    <form id="frm" class="input-group">
                         <input type="text" class="form-control" placeholder="地區" aria-label="地區">
-                        <input type="text" class="form-control" placeholder="日期" aria-label="日期">
+                        <input type="text" id="days" class="form-control" placeholder="天數" aria-label="天數">
                         <input type="text" class="form-control" placeholder="預算" aria-label="預算">
                         <span class="input-group-btn">
-                         <button class="btn btn-secondary" type="button">Go!</button>
+                         <button onclick="getValue()" class="btn btn-secondary" type="button">Go!</button>
                      </span>
-                    </div>
+                    </form>
                 </div>
                 <!---->
                 <div class="col">
