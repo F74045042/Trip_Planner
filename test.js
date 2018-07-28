@@ -330,13 +330,22 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     //getting path from chosen weight
     var max = getMaxWeight(genAllPathArr());
-
     var Arr = [];
-    var ReArr = [];
-    Arr = getPathofMaxWeight(max);
-    console.log(Arr);
+    //all route
+    var Result = [];
+    //走過的點
+    var temp = [];
+    //使用者選的
+    var chosen = [];
+    //天數紀錄
+    var i = 0;
 
-    genMultiItinerary(Arr[0]);
+    //start button generate the first dropdownlist
+    document.getElementById("start").onclick = function() {Gen1()};
+    //for user to choose the route they want then generate next day route
+    document.getElementById("Button").onclick = function() {Gen()};
+
+
 
     // ----------------------------------------------------------------- //
 
@@ -467,12 +476,69 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         return pathArr;
     }
 
+    //first day route
+    function Gen1(){
+    	Arr = getPathofMaxWeight(max);
+    	list(Arr);
+    }
+
+    //other day route
+    function Gen(){
+
+    	var path = [];
+    	//get the next day route
+    	path = genMultiItinerary(temp);
+    	//user choose which path they want
+    	chosen = UserChoose(path);
+    	temp = temp.concat(chosen) ;
+        
+        console.log(chosen);
+        Result[i] = chosen;
+        path = genMultiItinerary(temp);
+        //generate next day dropdown list
+        list(path);
+        console.log(Result);
+        i++;
+    
+
+        return Result;
+    }
+    
+    //generate dropdown list
+    function list(DayArray){
+    //reset dropdown list
+   	document.getElementById("DayArray").options.length = 0;
+   	select = document.getElementById( 'DayArray' );
+	for( index in DayArray ) {
+    
+    select.add( new Option( "path" + [index]) );
+    }
+
+    }
+
+    //for user to choose path
+    function UserChoose(DayArray){
+    console.log(DayArray);
+    var ddl = document.getElementById("DayArray")   
+    var choose = ddl.selectedIndex;   
+    console.log(index);
+
+   	return DayArray[choose];
+	}
+
+
 
     function genMultiItinerary(Arr) {
-        ReArr = remain(Arr);
-        ReMax = getMaxWeight2(ReArr);
-        console.log(ReArr);
-        getPathofMaxWeight2(ReMax, ReArr);
+    var remax;
+    var ReArr = [];
+    var DayArray = [];
+    var Array1 = [];
+       
+    ReArr = remain(Arr);
+    ReMax = getMaxWeight2(ReArr);
+    Array1 = getPathofMaxWeight2(ReMax, ReArr);
+    DayArray = Array1;
+    return DayArray;
     }
 
     //getting the max weight of all path with 2-D array
@@ -519,6 +585,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         return max;
     }
 
+		
     //get path of max weight (2-D array)
     function getPathofMaxWeight(max) {
         var AllPathArr = [];
@@ -568,13 +635,11 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                 PathArrnum = 0;
             }
         }
-        console.log(ReMaxArr);
         return ReMaxArr;
     }
 
     //eliminate the duplicate node from all path
     function remain(MaxArr) {
-        console.log(MaxArr);
         AllPathArr = genAllPathArr();
         var RemainArr = [];
         var count = 0;
@@ -594,7 +659,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         }
         return RemainArr;
     }
-
 
 });
 
