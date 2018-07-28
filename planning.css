@@ -1,0 +1,15 @@
+.nav {
+    font-size: 15px;
+}
+
+#nav-home-tab {
+    margin-left: 10px;
+}
+
+#nav-tabContent {
+    margin: 120px 40px;
+}
+
+svg {
+    border: 1px solid black;
+}
