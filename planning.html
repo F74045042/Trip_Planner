@@ -9,11 +9,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <!-- Head start from here -->
     <title>Trip Planner - Planning</title>
 </head>
@@ -32,7 +32,7 @@
                         <input type="text" id="days" class="form-control" placeholder="天數" aria-label="天數">
                         <input type="text" class="form-control" placeholder="預算" aria-label="預算">
                         <span class="input-group-btn">
-                         <button onclick="getValue()" class="btn btn-secondary" type="button">Go!</button>
+                         <button class="btn btn-secondary" type="button" id="Go">Go!</button>
                      </span>
                     </form>
                 </div>
@@ -69,10 +69,20 @@
             <div class="tab-content" id="nav-tabContent">
                 <div class="tab-pane fade show active" id="planning" role="tabpanel" aria-labelledby="nav-home-tab">
                     <h1>行程</h1>
-                    <svg width="960" height="600" border="20px"></svg>
+                    <svg id="loader" width="960" height="600"></svg>
                 </div>
                 <div class="tab-pane fade" id="suggest" role="tabpanel" aria-labelledby="nav-profile-tab">
                     <h1>建議</h1>
+                    <div class="container">
+                        <div id="recommend" class="row justify-content-start">
+<!--                             <div class="col-md-2" id="path-box">
+                                <div id="content">出發地</div>
+                                <h3 id="node">A</h3>
+                                <div id="count">32</div>
+                                <div id="count" style="color: gray;margin-right: 15px;">選項</div>
+                            </div> -->
+                        </div>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="stay" role="tabpanel" aria-labelledby="nav-contact-tab">
                     <h1>住宿</h1>

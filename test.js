@@ -316,20 +316,11 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             poiIDX.addNode(graph.nodes[i].id, graph.nodes[i].weight, graph.nodes[i].time);
     }
 
-    // generate path starting from each node and store under poiIDX
-    for (var idx = 0; idx < poiIDX.length; idx++) {
-        var newPath = new POIList();
-        genPath(poiIDX.nodeIDX(idx), 200, newPath, idx);
-    }
-
-
-
     // generating all path array
     //console.log(genAllPathArr()); 
 
-
     //getting path from chosen weight
-    var max = getMaxWeight(genAllPathArr());
+    // var max = getMaxWeight(genAllPathArr());
     var Arr = [];
     //all route
     var Result = [];
@@ -340,11 +331,24 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     //天數紀錄
     var i = 0;
 
-    //start button generate the first dropdownlist
-    document.getElementById("start").onclick = function() {Gen1()};
-    //for user to choose the route they want then generate next day route
-    document.getElementById("Button").onclick = function() {Gen()};
+    // //start button generate the first dropdownlist
+    // document.getElementById("start").onclick = function() { Gen1() };
+    // //for user to choose the route they want then generate next day route
+    // document.getElementById("Button").onclick = function() { Gen() };
 
+    // Go button click call initRcmd function
+    document.getElementById("Go").onclick = function() {
+        // generate path starting from each node and store under poiIDX
+        for (var idx = 0; idx < poiIDX.length; idx++) {
+            var newPath = new POIList();
+            genPath(poiIDX.nodeIDX(idx), getValue()*60, newPath, idx);
+        }
+        initRcmd(getMaxWeight(genAllPathArr()));
+    };
+    // path box click event
+    $('#recommend').on('click', '#path-box', function(e) {
+        console.log($(this).text().substr(3, 1));
+    });
 
 
     // ----------------------------------------------------------------- //
@@ -355,10 +359,38 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     // ----------------------- self-defined graph functions -------------------- //
 
+    // initial recommend page, show all the first node of each first-day route
+    function initRcmd(max) {
+        // get first day route
+        Arr = getPathofMaxWeight(max);
+        console.log(Arr);
+        var tmp = Arr[0][0];
+        var num = 0;
+        // get the first node of each first-day route
+        for (var i = 0; i < Arr.length; i++) {
+            if (Arr[i][0] != tmp) {
+                $("#recommend").append("<div class=" + "col-md-2 col-md-offset-2" + " id=" + "path-box" + ">" +
+                    "<div id=" + "content" + ">出發地</div>" +
+                    "<h3 id=" + "node" + ">" + tmp + "</h3>" +
+                    "<div id=" + "count" + ">" + num + "</div>" +
+                    "<div id=" + "\"count\"" + "style=" + "\"color: gray;margin-right: 15px;\"" + ">選項</div></div>");
+                tmp = Arr[i][0];
+                num = 0;
+            }
+            num++;
+        }
+        $("#recommend").append("<div class=" + "col-md-2 col-md-offset-2" + " id=" + "path-box" + ">" +
+            "<div id=" + "content" + ">出發地</div>" +
+            "<h3 id=" + "node" + ">" + tmp + "</h3>" +
+            "<div id=" + "count" + ">" + num + "</div>" +
+            "<div id=" + "\"count\"" + "style=" + "\"color: gray;margin-right: 15px;\"" + ">選項</div></div>");
+    }
+
     // get the value of each element from the form in planning.html
     function getValue() {
         var x = document.getElementById("frm");
-        console.log(x.elements[0].value);
+        console.log(x.elements[1].value);
+        return x.elements[1].value;
     }
 
     // check if a node is connected to the last poi in a path
@@ -477,21 +509,21 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     }
 
     //first day route
-    function Gen1(){
-    	Arr = getPathofMaxWeight(max);
-    	list(Arr);
+    function Gen1() {
+        Arr = getPathofMaxWeight(max);
+        list(Arr);
     }
 
     //other day route
-    function Gen(){
+    function Gen() {
 
-    	var path = [];
-    	//get the next day route
-    	path = genMultiItinerary(temp);
-    	//user choose which path they want
-    	chosen = UserChoose(path);
-    	temp = temp.concat(chosen) ;
-        
+        var path = [];
+        //get the next day route
+        path = genMultiItinerary(temp);
+        //user choose which path they want
+        chosen = UserChoose(path);
+        temp = temp.concat(chosen);
+
         console.log(chosen);
         Result[i] = chosen;
         path = genMultiItinerary(temp);
@@ -499,46 +531,46 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         list(path);
         console.log(Result);
         i++;
-    
+
 
         return Result;
     }
-    
+
     //generate dropdown list
-    function list(DayArray){
-    //reset dropdown list
-   	document.getElementById("DayArray").options.length = 0;
-   	select = document.getElementById( 'DayArray' );
-	for( index in DayArray ) {
-    
-    select.add( new Option( "path" + [index]) );
-    }
+    function list(DayArray) {
+        //reset dropdown list
+        document.getElementById("DayArray").options.length = 0;
+        select = document.getElementById('DayArray');
+        for (index in DayArray) {
+
+            select.add(new Option("path" + [index]));
+        }
 
     }
 
     //for user to choose path
-    function UserChoose(DayArray){
-    console.log(DayArray);
-    var ddl = document.getElementById("DayArray")   
-    var choose = ddl.selectedIndex;   
-    console.log(index);
+    function UserChoose(DayArray) {
+        console.log(DayArray);
+        var ddl = document.getElementById("DayArray")
+        var choose = ddl.selectedIndex;
+        console.log(index);
 
-   	return DayArray[choose];
-	}
+        return DayArray[choose];
+    }
 
 
 
     function genMultiItinerary(Arr) {
-    var remax;
-    var ReArr = [];
-    var DayArray = [];
-    var Array1 = [];
-       
-    ReArr = remain(Arr);
-    ReMax = getMaxWeight2(ReArr);
-    Array1 = getPathofMaxWeight2(ReMax, ReArr);
-    DayArray = Array1;
-    return DayArray;
+        var remax;
+        var ReArr = [];
+        var DayArray = [];
+        var Array1 = [];
+
+        ReArr = remain(Arr);
+        ReMax = getMaxWeight2(ReArr);
+        Array1 = getPathofMaxWeight2(ReMax, ReArr);
+        DayArray = Array1;
+        return DayArray;
     }
 
     //getting the max weight of all path with 2-D array
@@ -563,7 +595,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         var maxRow = totweightArr.map(function(row) {
             return Math.max.apply(Math, row);
         });
-        
+
         //overall max value
         var max = Math.max.apply(null, maxRow);
         return max;
@@ -585,7 +617,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         return max;
     }
 
-		
+
     //get path of max weight (2-D array)
     function getPathofMaxWeight(max) {
         var AllPathArr = [];
@@ -649,7 +681,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                 while (curr) {
                     if (MaxArr.indexOf(curr.id) == -1) {
                         curr = curr.next;
-                    } else { break; }
+                    } else {
+                        break;
+                    }
                 }
                 if (curr === null) {
                     RemainArr[count] = AllPathArr[i][j];
