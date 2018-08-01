@@ -341,9 +341,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     var i = 0;
 
     //start button generate the first dropdownlist
-    document.getElementById("start").onclick = function() {Gen1()};
+    document.getElementById("start").onclick = function() { Gen1() };
     //for user to choose the route they want then generate next day route
-    document.getElementById("Button").onclick = function() {Gen()};
+    document.getElementById("Button").onclick = function() { Gen() };
 
 
 
@@ -477,21 +477,21 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     }
 
     //first day route
-    function Gen1(){
-    	Arr = getPathofMaxWeight(max);
-    	list(Arr);
+    function Gen1() {
+        Arr = getPathofMaxWeight(max);
+        list(Arr);
     }
 
     //other day route
-    function Gen(){
+    function Gen() {
 
-    	var path = [];
-    	//get the next day route
-    	path = genMultiItinerary(temp);
-    	//user choose which path they want
-    	chosen = UserChoose(path);
-    	temp = temp.concat(chosen) ;
-        
+        var path = [];
+        //get the next day route
+        path = genMultiItinerary(temp);
+        //user choose which path they want
+        chosen = UserChoose(path);
+        temp = temp.concat(chosen);
+
         console.log(chosen);
         Result[i] = chosen;
         path = genMultiItinerary(temp);
@@ -499,46 +499,46 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         list(path);
         console.log(Result);
         i++;
-    
+
 
         return Result;
     }
-    
+
     //generate dropdown list
-    function list(DayArray){
-    //reset dropdown list
-   	document.getElementById("DayArray").options.length = 0;
-   	select = document.getElementById( 'DayArray' );
-	for( index in DayArray ) {
-    
-    select.add( new Option( "path" + [index]) );
-    }
+    function list(DayArray) {
+        //reset dropdown list
+        document.getElementById("DayArray").options.length = 0;
+        select = document.getElementById('DayArray');
+        for (index in DayArray) {
+
+            select.add(new Option("path" + [index]));
+        }
 
     }
 
     //for user to choose path
-    function UserChoose(DayArray){
-    console.log(DayArray);
-    var ddl = document.getElementById("DayArray")   
-    var choose = ddl.selectedIndex;   
-    console.log(index);
+    function UserChoose(DayArray) {
+        console.log(DayArray);
+        var ddl = document.getElementById("DayArray")
+        var choose = ddl.selectedIndex;
+        console.log(index);
 
-   	return DayArray[choose];
-	}
+        return DayArray[choose];
+    }
 
 
 
     function genMultiItinerary(Arr) {
-    var remax;
-    var ReArr = [];
-    var DayArray = [];
-    var Array1 = [];
-       
-    ReArr = remain(Arr);
-    ReMax = getMaxWeight2(ReArr);
-    Array1 = getPathofMaxWeight2(ReMax, ReArr);
-    DayArray = Array1;
-    return DayArray;
+        var remax;
+        var ReArr = [];
+        var DayArray = [];
+        var Array1 = [];
+
+        ReArr = remain(Arr);
+        ReMax = getMaxWeight2(ReArr);
+        Array1 = getPathofMaxWeight2(ReMax, ReArr);
+        DayArray = Array1;
+        return DayArray;
     }
 
     //getting the max weight of all path with 2-D array
@@ -563,7 +563,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         var maxRow = totweightArr.map(function(row) {
             return Math.max.apply(Math, row);
         });
-        
+
         //overall max value
         var max = Math.max.apply(null, maxRow);
         return max;
@@ -585,7 +585,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         return max;
     }
 
-		
+
     //get path of max weight (2-D array)
     function getPathofMaxWeight(max) {
         var AllPathArr = [];
