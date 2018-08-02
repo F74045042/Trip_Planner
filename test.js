@@ -331,6 +331,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     //天數紀錄
     var i = 0;
 
+    //user input H
+    var H;
+
     // //start button generate the first dropdownlist
     // document.getElementById("start").onclick = function() { Gen1() };
     // //for user to choose the route they want then generate next day route
@@ -338,12 +341,24 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     // Go button click call initRcmd function
     document.getElementById("Go").onclick = function() {
-        // generate path starting from each node and store under poiIDX
-        for (var idx = 0; idx < poiIDX.length; idx++) {
-            var newPath = new POIList();
-            genPath(poiIDX.nodeIDX(idx), getValue()*60, newPath, idx);
+        //user input H
+        currH = getValue();
+        if (H != currH) {
+            // clean POI
+            clrPOIList(poiIDX);
+
+            // clean path box(UI)
+            clrPathBox();
+            // generate path starting from each node and store under poiIDX
+            for (var idx = 0; idx < poiIDX.length; idx++) {
+                var newPath = new POIList();
+                genPath(poiIDX.nodeIDX(idx), getValue() * 60, newPath, idx);
+            }
+            // add path box to suggest page
+            addPathBox(getMaxWeight(genAllPathArr()));
+
+            H = currH;
         }
-        initRcmd(getMaxWeight(genAllPathArr()));
     };
     // path box click event
     $('#recommend').on('click', '#path-box', function(e) {
@@ -359,8 +374,22 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     // ----------------------- self-defined graph functions -------------------- //
 
-    // initial recommend page, show all the first node of each first-day route
-    function initRcmd(max) {
+    //clean POIList
+    function clrPOIList(POIList) {
+        let curr = POIList.head;
+        for(var i=0; i<POIList.length; i++){
+            curr.down = null;
+            curr = curr.next;
+        }
+    }
+
+    // clean path box
+    function clrPathBox() {
+        $("div #path-box").detach();
+    }
+
+    // show all the first node of each first-day route
+    function addPathBox(max) {
         // get first day route
         Arr = getPathofMaxWeight(max);
         console.log(Arr);
@@ -389,7 +418,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     // get the value of each element from the form in planning.html
     function getValue() {
         var x = document.getElementById("frm");
-        console.log(x.elements[1].value);
+        console.log("Day: " + x.elements[1].value);
         return x.elements[1].value;
     }
 
