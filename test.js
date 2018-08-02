@@ -331,17 +331,10 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     //天數紀錄
     var i = 0;
 
-<<<<<<< HEAD
-    //start button generate the first dropdownlist
-    document.getElementById("start").onclick = function() { Gen1() };
-    //for user to choose the route they want then generate next day route
-    document.getElementById("Button").onclick = function() { Gen() };
-=======
     // //start button generate the first dropdownlist
     // document.getElementById("start").onclick = function() { Gen1() };
     // //for user to choose the route they want then generate next day route
     // document.getElementById("Button").onclick = function() { Gen() };
->>>>>>> d2923bf8aa816e8b20075cb891cafd3ce0e0f30b
 
     // Go button click call initRcmd function
     document.getElementById("Go").onclick = function() {
