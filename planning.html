@@ -32,7 +32,9 @@
                         <input type="text" id="days" class="form-control" placeholder="天數" aria-label="天數">
                         <input type="text" class="form-control" placeholder="預算" aria-label="預算">
                         <span class="input-group-btn">
-                         <button class="btn btn-secondary" type="button" id="Go">Go!</button>
+                            <nav class="nav nav-tabs">
+                         <button class="btn btn-secondary" type="button" id="Go" data-toggle="tab" href="#suggest"href="#suggest">Go!</button>
+                     </nav>
                      </span>
                     </form>
                 </div>
@@ -57,25 +59,25 @@
                 <!---->
             </nav>
             <nav class="nav nav-tabs bg-white" id="myTab" role="tablist">
-                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#planning" role="tab" aria-controls="nav-home" aria-selected="true">行程</a>
-                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#suggest" role="tab" aria-controls="nav-profile" aria-selected="false">推薦</a>
-                <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#stay" role="tab" aria-controls="nav-contact" aria-selected="false">住宿</a>
-                <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#others" role="tab" aria-controls="nav-contact" aria-selected="false">其他</a>
+                <a class="nav-item nav-link active" id="page1-tab" data-toggle="tab" href="#planning" role="tab" aria-controls="page1" aria-selected="true">行程</a>
+                <a class="nav-item nav-link" id="page2-tab" data-toggle="tab" href="#suggest" role="tab" aria-controls="page2" aria-selected="false">推薦</a>
+                <a class="nav-item nav-link" id="page3-tab" data-toggle="tab" href="#hotel" role="tab" aria-controls="page3" aria-selected="false">住宿</a>
+                <a class="nav-item nav-link disabled" id="page4-tab" data-toggle="tab" href="#others" role="tab" aria-controls="page4" aria-selected="false">其他</a>
             </nav>
         </div>
         <!---->
         <!-- Content -->
         <div class="mx-auto" style="width: 1200px">
             <div class="tab-content" id="nav-tabContent">
-                <div class="tab-pane fade show active" id="planning" role="tabpanel" aria-labelledby="nav-home-tab">
+                <div class="tab-pane fade show active" id="planning" role="tabpanel" aria-labelledby="page1-tab">
                     <h1>行程</h1>
                     <svg id="loader" width="960" height="600"></svg>
                 </div>
-                <div class="tab-pane fade" id="suggest" role="tabpanel" aria-labelledby="nav-profile-tab">
+                <div class="tab-pane fade" id="suggest" role="tabpanel" aria-labelledby="page2-tab">
                     <h1>建議</h1>
                     <div class="container">
                         <div id="recommend" class="row justify-content-start">
-<!--                             <div class="col-md-2" id="path-box">
+                            <!--                             <div class="col-md-2" id="path-box">
                                 <div id="content">出發地</div>
                                 <h3 id="node">A</h3>
                                 <div id="count">32</div>
@@ -84,10 +86,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="stay" role="tabpanel" aria-labelledby="nav-contact-tab">
+                <div class="tab-pane fade" id="hotel" role="tabpanel" aria-labelledby="page3-tab">
                     <h1>住宿</h1>
                 </div>
-                <div class="tab-pane fade" id="others" role="tabpanel" aria-labelledby="nav-contact-tab">
+                <div class="tab-pane fade" id="others" role="tabpanel" aria-labelledby="page4-tab">
                     <h1>其他</h1>
                 </div>
             </div>
