@@ -316,20 +316,20 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             poiIDX.addNode(graph.nodes[i].id, graph.nodes[i].weight, graph.nodes[i].time);
     }
 
-    // generating all path array
-    //console.log(genAllPathArr()); 
+    // // generating all path array
+    // console.log(genAllPathArr()); 
 
-    //getting path from chosen weight
+    // // getting path from chosen weight
     // var max = getMaxWeight(genAllPathArr());
-    var Arr = [];
-    //all route
-    var Result = [];
-    //走過的點
-    var temp = [];
-    //使用者選的
-    var chosen = [];
-    //天數紀錄
-    var i = 0;
+    // var Arr = [];
+    // //all route
+    // var Result = [];
+    // //走過的點
+    // var temp = [];
+    // //使用者選的
+    // var chosen = [];
+    // //天數紀錄
+    // var i = 0;
 
     //user input H
     var H;
@@ -360,10 +360,15 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             H = currH;
         }
     };
+
     // path box click event
     $('#recommend').on('click', '#path-box', function(e) {
         console.log($(this).text().substr(3, 1));
     });
+
+    // test: dijkstraMinCost
+    let minCost = dijkstraMinCost(graph, graph.nodes[0], graph.nodes[6]);
+    console.log(minCost);
 
 
     // ----------------------------------------------------------------- //
@@ -377,7 +382,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     //clean POIList
     function clrPOIList(POIList) {
         let curr = POIList.head;
-        for(var i=0; i<POIList.length; i++){
+        for (var i = 0; i < POIList.length; i++) {
             curr.down = null;
             curr = curr.next;
         }
@@ -722,6 +727,105 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         }
         return RemainArr;
     }
+
+    // check connectivity between nodes
+    function connected(node1, node2) {
+        // check connectivity 
+        for (var i = 0; i < graph.links.length; i++) {
+
+            // source = node1 && target = node2 OR vice versa
+            if ((graph.links[i].source.id == node1.id && graph.links[i].target.id == node2.id) ||
+                (graph.links[i].target.id == node1.id && graph.links[i].source.id == node2.id))
+                return true;
+        }
+        return false;
+    }
+
+    // returns unprocessed, lowest-cost node
+    function lowestCostNode(costs, processed) {
+        delete costs["0"]; // removing some unnecssary stuff
+        return Object.keys(costs).reduce((lowest, node) => {
+            if (lowest === null || costs[node] < costs[lowest]) {
+                if (!processed.includes(node)) {
+                    lowest = node;
+                }
+            }
+            return lowest;
+        }, null);
+    }
+
+    // // returns link between 2 nodes
+    function getLink(node1, node2) {
+        for (var i = 0; i < graph.links.length; i++) {
+            // source = node1 && target = node2 OR vice versa
+            if ((graph.links[i].source.id == node1.id && graph.links[i].target.id == node2.id) ||
+                (graph.links[i].target.id == node1.id && graph.links[i].source.id == node2.id))
+                return graph.links[i];
+        }
+        return null;
+    }
+
+    // get node by node_id
+    function getNodeByID(graph, id) {
+        for (var i = 0; i < graph.nodes.length; i++) {
+            if (graph.nodes[i].id === id) {
+                return graph.nodes[i];
+            }
+        }
+        return null;
+    }
+
+
+    // Dijkstra shortest path: I only wanna know the cheapest cost, don't care about the path(for hotel selection)
+    function dijkstraMinCost(graph, src, dest) {
+        // add destination and cost = INF
+        // add source and cost = 0
+        var costs = Object.assign({}, dest.id);
+        costs[dest.id] = Infinity;
+
+        costs = Object.assign(costs, src.id);
+        costs[src.id] = 0;
+
+
+        // add the neighbors of source and their costs
+        for (var i = 0; i < graph.nodes.length; i++) {
+            if (connected(src, graph.nodes[i])) {
+                costs = Object.assign(costs, graph.nodes[i].id);
+                costs[graph.nodes[i].id] = getLink(src, graph.nodes[i]).cost;
+            }
+        }
+
+
+        // to keep track of processed nodes
+        const processed = [];
+
+        let nodeID = lowestCostNode(costs, processed);
+
+        while (nodeID) {
+            let cost = costs[nodeID];
+            let node = getNodeByID(graph, nodeID);
+
+            for (var i = 0; i < graph.nodes.length; i++) {
+                if (connected(node, graph.nodes[i])) {
+                    let newCost = cost + getLink(node, graph.nodes[i]).cost;
+                    if (!costs[graph.nodes[i].id]) {
+                        costs[graph.nodes[i].id] = newCost;
+                    }
+
+                    if (costs[graph.nodes[i].id] > newCost) {
+                        costs[graph.nodes[i].id] = newCost;
+                    }
+                }
+            }
+
+            processed.push(nodeID);
+            nodeID = lowestCostNode(costs, processed);
+        }
+
+        console.log(costs);
+        return costs[dest.id];
+    }
+
 
 });
 
