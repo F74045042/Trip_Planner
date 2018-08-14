@@ -743,7 +743,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     // returns unprocessed, lowest-cost node
     function lowestCostNode(costs, processed) {
-        delete costs["0"]; // removing some unnecssary stuff
+        delete costs["0"]; // removing some extra stuff
         return Object.keys(costs).reduce((lowest, node) => {
             if (lowest === null || costs[node] < costs[lowest]) {
                 if (!processed.includes(node)) {
@@ -754,7 +754,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         }, null);
     }
 
-    // // returns link between 2 nodes
+    // returns link between 2 nodes
     function getLink(node1, node2) {
         for (var i = 0; i < graph.links.length; i++) {
             // source = node1 && target = node2 OR vice versa
@@ -776,7 +776,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     }
 
 
-    // Dijkstra shortest path: I only wanna know the cheapest cost, don't care about the path(for hotel selection)
+    // Dijkstra shortest path: returns the minimum cost to travel from src to dest, don't care about the path(for hotel selection)
     function dijkstraMinCost(graph, src, dest) {
         // add destination and cost = INF
         // add source and cost = 0
@@ -826,7 +826,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         return costs[dest.id];
     }
 
-
 });
 
 // zoomable
@@ -846,8 +845,6 @@ var zoom = d3.zoom()
     });
 
 svg.call(zoom);
-
-
 
 function dragstarted(d) {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
