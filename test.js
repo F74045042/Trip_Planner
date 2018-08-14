@@ -341,7 +341,13 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     // Go button click call initRcmd function
     document.getElementById("Go").onclick = function() {
-        //user input H
+        //document.getElementById("myTab").style.display="none";
+        document.getElementById("myTab").style.visibility="hidden";
+
+        // jump to suggest page
+        $('#page2-tab').tab('show');
+
+        // user input H
         currH = getValue();
         if (H != currH) {
             // clean POI
