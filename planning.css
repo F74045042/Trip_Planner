@@ -33,7 +33,7 @@ svg {
 }
 
 #node {
-	/* #007AFF #DD3645*/
+    /* #007AFF #DD3645*/
     color: #DD3645;
     border-bottom: 1px dotted rgba(0, 0, 0, 0.1);
 }

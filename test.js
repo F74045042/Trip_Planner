@@ -342,7 +342,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     // Go button click call initRcmd function
     document.getElementById("Go").onclick = function() {
         //document.getElementById("myTab").style.display="none";
-        document.getElementById("myTab").style.visibility="hidden";
+        // document.getElementById("myTab").style.visibility="hidden";
 
         // jump to suggest page
         $('#page2-tab').tab('show');
@@ -362,6 +362,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             }
             // add path box to suggest page
             addPathBox(getMaxWeight(genAllPathArr()));
+            addEat(getPathofMaxWeight(getMaxWeight(genAllPathArr())));
 
             H = currH;
         }
@@ -380,10 +381,19 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     // ----------------------- self-defined graph functions -------------------- //
 
+    // insert restaurant node to Path according to morning, afternoon and evening
+    // assume the best path started at 7am.
+    function addEat(Path) {
+        let currT = 7 * 60;
+        console.log(Path);
+        // let currP = POIList.head;
+        // if(currT + POIList.)
+    }
+
     //clean POIList
     function clrPOIList(POIList) {
         let curr = POIList.head;
-        for(var i=0; i<POIList.length; i++){
+        for (var i = 0; i < POIList.length; i++) {
             curr.down = null;
             curr = curr.next;
         }
