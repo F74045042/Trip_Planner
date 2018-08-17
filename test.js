@@ -362,7 +362,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             }
             // add path box to suggest page
             addPathBox(getMaxWeight(genAllPathArr()));
-            addEat(getPathofMaxWeight(getMaxWeight(genAllPathArr())));
 
             H = currH;
         }
@@ -385,15 +384,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
 
     // ----------------------- self-defined graph functions -------------------- //
-
-    // insert restaurant node to Path according to morning, afternoon and evening
-    // assume the best path started at 7am.
-    function addEat(Path) {
-        let currT = 7 * 60;
-        console.log(Path);
-        // let currP = POIList.head;
-        // if(currT + POIList.)
-    }
 
     //clean POIList
     function clrPOIList(POIList) {
@@ -419,7 +409,8 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         // get the first node of each first-day route
         for (var i = 0; i < Arr.length; i++) {
             if (Arr[i][0] != tmp) {
-                $("#recommend").append("<div class=" + "col-md-2 col-md-offset-2" + " id=" + "path-box" + ">" +
+                $("#recommend").append(
+                    "<div class=" + "col-md-2 col-md-offset-2" + " id=" + "path-box" + ">" +
                     "<div id=" + "content" + ">出發地</div>" +
                     "<h3 id=" + "node" + ">" + tmp + "</h3>" +
                     "<div id=" + "count" + ">" + num + "</div>" +
@@ -791,6 +782,18 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         return null;
     }
 
+    function cutPath(path, time) {
+        let curr = path.head;
+        var cost = 0;
+        while (curr.next) {
+            if (cost > time) {
+                return curr;
+            } else {
+                cost += curr.time + getLink(curr, curr.next).cost;
+            }
+            curr = curr.next;
+        }
+    }
 
     // Dijkstra shortest path: returns the minimum cost to travel from src to dest, don't care about the path(for hotel selection)
     function dijkstraMinCost(graph, src, dest) {
