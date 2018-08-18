@@ -370,6 +370,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     // path box click event
     $('#recommend').on('click', '#path-box', function(e) {
         console.log($(this).text().substr(3, 1));
+        addChooseBox($(this).text().substr(3, 1), getMaxWeight(genAllPathArr()));
     });
 
     // test: dijkstraMinCost
@@ -399,6 +400,34 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         $("div #path-box").detach();
     }
 
+    //show all the path of choosen node
+    function addChooseBox(start, max) {
+        $("div #choose-box").detach();
+        Arr = getPathofMaxWeight(max);
+        console.log(Arr);
+        var isStart = 0;
+        var isShow = 0;
+        var path = "";
+        for (var i = 0; i < Arr.length; i++) {
+            if (Arr[i][0] == start) {
+                for (var j = 1; j < Arr[i].length; j++) {
+                    path += " -> " + Arr[i][j];
+                }
+                isShow = 0;
+                isStart = 1;
+            }
+            console.log(path);
+            if (isStart == 1 && isShow == 0) {
+                $("#choose-body").append("<div class=\"row justify-content-between\" id=choose-box>" +
+                    "<h3 id=" + "choose-node>" + start + "</h3>" +
+                    "<div id=" + "choose-content>" + path + "</div>" +
+                    "<button type=button class=\"btn-sm btn-primary\">選擇</button></div>");
+                path = "";
+                isShow = 1;
+            }
+        }
+    }
+
     // show all the first node of each first-day route
     function addPathBox(max) {
         // get first day route
@@ -410,7 +439,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         for (var i = 0; i < Arr.length; i++) {
             if (Arr[i][0] != tmp) {
                 $("#recommend").append(
-                    "<div class=" + "col-md-2 col-md-offset-2" + " id=" + "path-box" + ">" +
+                    "<div class=" + "col-md-2 col-md-offset-2" + " id=" + "path-box" + " data-toggle=" + "modal" + " data-target=" + "#choose>" +
                     "<div id=" + "content" + ">出發地</div>" +
                     "<h3 id=" + "node" + ">" + tmp + "</h3>" +
                     "<div id=" + "count" + ">" + num + "</div>" +
@@ -420,7 +449,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             }
             num++;
         }
-        $("#recommend").append("<div class=" + "col-md-2 col-md-offset-2" + " id=" + "path-box" + ">" +
+        $("#recommend").append("<div class=" + "col-md-2 col-md-offset-2" + " id=" + "path-box" + " data-toggle=" + "modal" + " data-target=" + "#choose>" +
             "<div id=" + "content" + ">出發地</div>" +
             "<h3 id=" + "node" + ">" + tmp + "</h3>" +
             "<div id=" + "count" + ">" + num + "</div>" +
