@@ -1,8 +1,34 @@
 function POIList() {
     this.head = null;
     this.length = 0;
+    let lunch;
+    let dinner;
 
     // --------------- member methods --------------- //
+    this.insertNode = function(position, id, weight, time) {
+        if(position >= 0 && position <= this.length) {
+            let newNode = new node(id, weight, time, null, null);
+            let curr = this.head;
+            let prev;
+            let idx = 0;
+
+            if(position == 0) {
+                newNode.next = curr;
+                this.head = newNode;
+            } else {
+                while (idx++ < position) {
+                    prev = curr;
+                    curr = curr.next;
+                }
+                newNode.next = curr;
+                prev.next = newNode;
+            }
+            this.length++;
+        } else {
+            console.log("out of index");
+        }
+
+    }
     // append poi node
     this.addNode = function(id, weight, time) {
         const newNode = new node(id, weight, time, null, null);
@@ -201,7 +227,7 @@ var opts = {
 
 var spinner = new Spinner(opts).spin(target);
 
-d3.json("http://localhost:8000/test.json", function(error, graph) {
+d3.json("http://127.0.0.1:8000/Desktop/Trip_Planner-master/test.json", function(error, graph) {
     if (error) throw error;
 
     // stop loader
@@ -341,7 +367,13 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     // Go button click call initRcmd function
     document.getElementById("Go").onclick = function() {
-        //user input H
+        //document.getElementById("myTab").style.display="none";
+        // document.getElementById("myTab").style.visibility="hidden";
+
+        // jump to suggest page
+        $('#page2-tab').tab('show');
+
+        // user input H
         currH = getValue();
         if (H != currH) {
             // clean POI
@@ -352,12 +384,13 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             // generate path starting from each node and store under poiIDX
             for (var idx = 0; idx < poiIDX.length; idx++) {
                 var newPath = new POIList();
-                genPath(poiIDX.nodeIDX(idx), getValue() * 60, newPath, idx);
+                genPath(poiIDX.nodeIDX(idx),250, newPath, idx);
             }
             // add path box to suggest page
             addPathBox(getMaxWeight(genAllPathArr()));
 
             H = currH;
+            restaurant(poiIDX.nodeIDX(5 ).down.down.path);
         }
     };
 
@@ -370,6 +403,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     let minCost = dijkstraMinCost(graph, graph.nodes[0], graph.nodes[6]);
     console.log(minCost);
 
+    
 
     // ----------------------------------------------------------------- //
 
@@ -403,7 +437,8 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         // get the first node of each first-day route
         for (var i = 0; i < Arr.length; i++) {
             if (Arr[i][0] != tmp) {
-                $("#recommend").append("<div class=" + "col-md-2 col-md-offset-2" + " id=" + "path-box" + ">" +
+                $("#recommend").append(
+                    "<div class=" + "col-md-2 col-md-offset-2" + " id=" + "path-box" + ">" +
                     "<div id=" + "content" + ">出發地</div>" +
                     "<h3 id=" + "node" + ">" + tmp + "</h3>" +
                     "<div id=" + "count" + ">" + num + "</div>" +
@@ -775,6 +810,110 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         return null;
     }
 
+    function restaurant(path){
+    console.log(path.getTotalCost(graph));
+    cutPath(path,50,50);
+    getmin(path);
+
+    }
+
+    //get min path for restaurant
+    function getmin(path){
+
+        var cost1 = 0 , cost2 = 0 ;
+        var result = []; 
+        var i ;
+        var temp1 , temp2 , nodetemp;
+        for ( i = 0 ; i < graph.nodes.length ; i++) {
+            if(graph.nodes[i].type == 'restaurant'){
+            temp1 = cost1;
+            cost1 = dijkstraMinCost(graph, path.lunch, graph.nodes[i]) + dijkstraMinCost(graph, path.lunch.next, graph.nodes[i]); 
+            if (cost1 > temp1) {result[0] = i;}
+
+            if(path.dinner.next == null){
+                temp2 = cost2;
+                cost2 = dijkstraMinCost(graph, path.dinner, graph.nodes[i]);  
+            }
+            else {
+                temp2 = cost2;
+                cost2 = dijkstraMinCost(graph, path.dinner, graph.nodes[i]) + dijkstraMinCost(graph, path.dinner.next, graph.nodes[i]); 
+            }
+
+            if (cost2 > temp2) {result[1] = i;}   
+            }
+        }
+
+        var index = getIndex(path);
+        console.log(index);
+        console.log(path.dinner.id);
+        path.insertNode(index[0] + 1,graph.nodes[result[0]].id,graph.nodes[result[0]].weight,graph.nodes[result[0]].time);
+        path.insertNode(index[1] + 2,graph.nodes[result[1]].id,graph.nodes[result[1]].weight,graph.nodes[result[1]].time);
+
+        console.log(path);
+        return result;
+    }
+
+    function getIndex(path){
+        let curr = path.head;
+        var index = [];
+        var count = 0;
+        while(curr){
+            if(curr.id == path.lunch.id){
+                index[0] = count;
+            }
+
+            if(curr.id == path.dinner.id){
+                index[1] = count;
+                return index;
+            }
+
+            curr = curr.next;
+            count++;
+        }
+    }
+
+    function cutPath(path, time1 , time2) {
+        let curr = path.head;
+        var node = [];
+        var flag = 0;
+        var cost = 0;
+        var condition = 0;
+        let prev ;
+        console.log(path);
+        while (curr) {
+            
+            
+            if (condition == 1){
+                cost += getLink(prev,curr).cost + curr.time;
+
+            }
+
+            if (condition == 0){
+                cost += curr.time;
+                condition = 1 ;
+            }
+
+            if (flag == 0 && cost > time1) {                
+                path.lunch = curr;
+                cost = 0;
+                condition = 0;
+                flag = 1;
+            } 
+            else if (flag == 1 && cost > time2){
+                path.dinner = curr;
+                break;
+            }
+
+            console.log(cost);
+            
+            
+            prev = curr;
+            console.log(prev);
+            curr = curr.next;
+            
+        }
+
+    }
 
     // Dijkstra shortest path: returns the minimum cost to travel from src to dest, don't care about the path(for hotel selection)
     function dijkstraMinCost(graph, src, dest) {
@@ -822,7 +961,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             nodeID = lowestCostNode(costs, processed);
         }
 
-        console.log(costs);
         return costs[dest.id];
     }
 
