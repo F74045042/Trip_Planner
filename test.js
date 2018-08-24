@@ -351,9 +351,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             poiIDX.addNode(graph.nodes[i].id, graph.nodes[i].weight, graph.nodes[i].time);
     }
 
-    // // generating all path array
-    // console.log(genAllPathArr()); 
-
     // // getting path from chosen weight
     // var max = getMaxWeight(genAllPathArr());
     // var Arr = [];
@@ -368,6 +365,11 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     //user input H
     var H;
+    var Final = [];
+    var Day;
+    var countDay = 0;
+    var reArr;
+    var FinalSchedule = []; // with hotel & restaurant
 
     // //start button generate the first dropdownlist
     // document.getElementById("start").onclick = function() { Gen1() };
@@ -378,6 +380,8 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     document.getElementById("Go").onclick = function() {
         //document.getElementById("myTab").style.display="none";
         // document.getElementById("myTab").style.visibility="hidden";
+
+        Day = getValue();
 
         // jump to suggest page
         $('#page2-tab').tab('show');
@@ -395,28 +399,82 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                 var newPath = new POIList();
                 genPath(poiIDX.nodeIDX(idx), 250, newPath, idx);
             }
+            reArr = genAllPathArr();
             // add path box to suggest page
-            addPathBox(getMaxWeight(genAllPathArr()));
+            addPathBox(getMaxWeight(reArr));
 
             H = currH;
         }
-
     };
 
     // path box click event
     $('#recommend').on('click', '#path-box', function(e) {
         console.log($(this).text().substr(3, 1));
-        addChooseBox($(this).text().substr(3, 1), getMaxWeight(genAllPathArr()));
+        addChooseBox($(this).text().substr(3, 1), getMaxWeight(reArr));
     });
+
+    // ChooseBox click event
+    $('#choose').on('click', '#choosen', function(e) {
+        if (countDay < Day) {
+            var str = document.getElementById('choose-node').innerHTML + getUpperCase(document.getElementById('choose-content').innerHTML);
+            var arr = [];
+            for (var i = 0; i < str.length; i++) {
+                arr[i] = str.charAt(i);
+            }
+            Final[countDay] = arr;
+            console.log(Final);
+            reArr = remain(Final[countDay]);
+            var max = getMaxWeight(reArr);
+            console.log(max);
+            clrPathBox();
+            addPathBox(max);
+
+            $('#choose').modal('hide');
+            countDay++;
+
+        } else {
+            clrPathBox();
+            $('#choose').modal('hide');       
+        }
+
+    })
+
+    // trigger hotel/restaurant selection
+    document.getElementById("genSchedule").onclick = function() {
+        // transform 'Final' to path array 'FinalSchedule'
+        for(var i=0; i<Final.length; i++) {
+            var path = new POIList();
+            for(var j=0; j<Final[i].length; j++) {
+                var node = getNodeByID(graph, Final[i][j]);
+                path.addNode(node.id, node.weight, node.time);
+            }
+            FinalSchedule.push(path);
+        }
+
+        // perform hotel/restaurant selection
+        for(var i=0; i<FinalSchedule.length; i++) {
+            restaurant(FinalSchedule[i]);
+            hotel_selection(graph, FinalSchedule[i]);
+        }
+        console.log(FinalSchedule);
+    }
 
 
     // ----------------------------------------------------------------- //
 
 
-
-
-
     // ----------------------- self-defined graph functions -------------------- //
+
+    function getUpperCase(str) {
+        var str2 = "";
+        for (var i = 0; i < str.length; i++) {
+            c = str.charAt(i);
+            if ((c >= 'A') && (c <= 'Z')) {
+                str2 += c;
+            }
+        }
+        return str2;
+    }
 
     //clean POIList
     function clrPOIList(POIList) {
@@ -435,7 +493,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     //show all the path of choosen node
     function addChooseBox(start, max) {
         $("div #choose-box").detach();
-        Arr = getPathofMaxWeight(max);
+        var Arr = getPathofMaxWeight(max);
         console.log(Arr);
         var isStart = 0;
         var isShow = 0;
@@ -450,10 +508,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             }
             console.log(path);
             if (isStart == 1 && isShow == 0) {
-                $("#choose-body").append("<div class=\"row justify-content-between\" id=choose-box>" +
-                    "<h3 id=" + "choose-node>" + start + "</h3>" +
-                    "<div id=" + "choose-content>" + path + "</div>" +
-                    "<button type=button class=\"btn-sm btn-primary\">選擇</button></div>");
+                $("#choose-body").append("<div class=\"row justify-content-between\" id=\"choose-box\">" +
+                    "<h3 id=" + "choose-node>" + start + "</h3>" + "<div id=" + "choose-content>" + path + "</div>" +
+                    "<button type=button class=\"btn-sm btn-primary\"" + "id=\"choosen\">選擇</button></div>");
                 path = "";
                 isShow = 1;
             }
@@ -463,7 +520,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     // show all the first node of each first-day route
     function addPathBox(max) {
         // get first day route
-        Arr = getPathofMaxWeight(max);
+        var Arr = getPathofMaxWeight(max);
         console.log(Arr);
         var tmp = Arr[0][0];
         var num = 0;
@@ -661,7 +718,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     }
 
 
-
     function genMultiItinerary(Arr) {
         var remax;
         var ReArr = [];
@@ -723,7 +779,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     //get path of max weight (2-D array)
     function getPathofMaxWeight(max) {
         var AllPathArr = [];
-        AllPathArr = genAllPathArr();
+        AllPathArr = reArr;
         var MaxArr = [];
         var PathArr = [];
         var PathArrnum = 0;
@@ -774,8 +830,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     //eliminate the duplicate node from all path
     function remain(MaxArr) {
-        AllPathArr = genAllPathArr();
+        AllPathArr = reArr;
         var RemainArr = [];
+        var s = [];
         var count = 0;
         for (var i = 0; i < AllPathArr.length; i++) {
             for (var j = 0; j < AllPathArr[i].length; j++) {
@@ -788,10 +845,13 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                     }
                 }
                 if (curr === null) {
-                    RemainArr[count] = AllPathArr[i][j];
+                    s[count] = AllPathArr[i][j];
                     count++;
                 }
             }
+            RemainArr[i] = s;
+            s = [];
+            count = 0;
         }
         return RemainArr;
     }
@@ -850,7 +910,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     //get min path for restaurant
     function getmin(path) {
-
         var cost1 = 0,
             cost2 = 0;
         var result = [];
