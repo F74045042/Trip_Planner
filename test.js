@@ -387,7 +387,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     // clean path box
     function clrPathBox() {
-        $("div #path-box").detach();ㄈ
+        $("div #path-box").detach();
     }
 
     //show all the path of choosen node
