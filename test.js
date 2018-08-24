@@ -126,6 +126,15 @@ function POIList() {
         return curr;
     }
 
+    // returns tail node
+    this.tailNode = function() {
+        let curr = this.head;
+        while (curr.next) {
+            curr = curr.next;
+        }
+        return curr;
+    }
+
 }
 
 // new node constructor
@@ -358,13 +367,17 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             // generate path starting from each node and store under poiIDX
             for (var idx = 0; idx < poiIDX.length; idx++) {
                 var newPath = new POIList();
-                genPath(poiIDX.nodeIDX(idx), getValue() * 60, newPath, idx);
+                genPath(poiIDX.nodeIDX(idx), 400, newPath, idx);
             }
             // add path box to suggest page
             addPathBox(getMaxWeight(genAllPathArr()));
 
             H = currH;
         }
+
+        // restaurant-selection & hotel-selection
+        var PATH = poiIDX.nodeIDX(4).down.down.path;
+        hotel_selection(graph, PATH);
     };
 
     // path box click event
@@ -373,9 +386,8 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         addChooseBox($(this).text().substr(3, 1), getMaxWeight(genAllPathArr()));
     });
 
-    // test: dijkstraMinCost
-    let minCost = dijkstraMinCost(graph, graph.nodes[0], graph.nodes[6]);
-    console.log(minCost);
+
+
 
 
     // ----------------------------------------------------------------- //
@@ -824,7 +836,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         }
     }
 
-    // Dijkstra shortest path: returns the minimum cost to travel from src to dest, don't care about the path(for hotel selection)
+    // Dijkstra shortest path: returns the minimum cost to travel from src to dest, don't care about the path
     function dijkstraMinCost(graph, src, dest) {
         // add destination and cost = INF
         // add source and cost = 0
@@ -870,8 +882,25 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             nodeID = lowestCostNode(costs, processed);
         }
 
-        console.log(costs);
         return costs[dest.id];
+    }
+
+    // hotel-selection: pick the closest one, no need to change hotel under a certain distance
+    function hotel_selection(graph, path) {
+        var minCost = Infinity;
+        var desiredNode;
+        for (var i=0; i<graph.nodes.length; i++) {
+            if(graph.nodes[i].type === 'hotel') {
+                if(dijkstraMinCost(graph, path.tailNode(), graph.nodes[i]) < minCost) {
+                    minCost = dijkstraMinCost(graph, path.tailNode(), graph.nodes[i]);
+                    desiredNode = graph.nodes[i];
+                    console.log(desiredNode);
+                }
+            }
+        }
+
+        path.addNode(desiredNode.id, desiredNode.weight, desiredNode.time);
+        console.log(path);
     }
 
 });
