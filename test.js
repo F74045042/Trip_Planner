@@ -1,8 +1,34 @@
 function POIList() {
     this.head = null;
     this.length = 0;
+    let lunch;
+    let dinner;
 
     // --------------- member methods --------------- //
+    this.insertNode = function(position, id, weight, time) {
+        if (position >= 0 && position <= this.length) {
+            let newNode = new node(id, weight, time, null, null);
+            let curr = this.head;
+            let prev;
+            let idx = 0;
+
+            if (position == 0) {
+                newNode.next = curr;
+                this.head = newNode;
+            } else {
+                while (idx++ < position) {
+                    prev = curr;
+                    curr = curr.next;
+                }
+                newNode.next = curr;
+                prev.next = newNode;
+            }
+            this.length++;
+        } else {
+            console.log("out of index");
+        }
+
+    }
     // append poi node
     this.addNode = function(id, weight, time) {
         const newNode = new node(id, weight, time, null, null);
@@ -367,7 +393,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             // generate path starting from each node and store under poiIDX
             for (var idx = 0; idx < poiIDX.length; idx++) {
                 var newPath = new POIList();
-                genPath(poiIDX.nodeIDX(idx), 400, newPath, idx);
+                genPath(poiIDX.nodeIDX(idx), 250, newPath, idx);
             }
             // add path box to suggest page
             addPathBox(getMaxWeight(genAllPathArr()));
@@ -377,7 +403,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
         // restaurant-selection & hotel-selection
         var PATH = poiIDX.nodeIDX(4).down.down.path;
+        restaurant(PATH);
         hotel_selection(graph, PATH);
+        console.log(PATH);
     };
 
     // path box click event
@@ -385,9 +413,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         console.log($(this).text().substr(3, 1));
         addChooseBox($(this).text().substr(3, 1), getMaxWeight(genAllPathArr()));
     });
-
-
-
 
 
     // ----------------------------------------------------------------- //
@@ -823,17 +848,97 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         return null;
     }
 
-    function cutPath(path, time) {
-        let curr = path.head;
-        var cost = 0;
-        while (curr.next) {
-            if (cost > time) {
-                return curr;
-            } else {
-                cost += curr.time + getLink(curr, curr.next).cost;
+    function restaurant(path) {
+        cutPath(path, 50, 50);
+        getmin(path);
+    }
+
+    //get min path for restaurant
+    function getmin(path) {
+
+        var cost1 = 0,
+            cost2 = 0;
+        var result = [];
+        var i;
+        var temp1, temp2, nodetemp;
+        for (i = 0; i < graph.nodes.length; i++) {
+            if (graph.nodes[i].type == 'restaurant') {
+                temp1 = cost1;
+                cost1 = dijkstraMinCost(graph, path.lunch, graph.nodes[i]) + dijkstraMinCost(graph, path.lunch.next, graph.nodes[i]);
+                if (cost1 > temp1) { result[0] = i; }
+
+                if (path.dinner.next == null) {
+                    temp2 = cost2;
+                    cost2 = dijkstraMinCost(graph, path.dinner, graph.nodes[i]);
+                } else {
+                    temp2 = cost2;
+                    cost2 = dijkstraMinCost(graph, path.dinner, graph.nodes[i]) + dijkstraMinCost(graph, path.dinner.next, graph.nodes[i]);
+                }
+
+                if (cost2 > temp2) { result[1] = i; }
             }
-            curr = curr.next;
         }
+
+        var index = getIndex(path);
+        path.insertNode(index[0] + 1, graph.nodes[result[0]].id, graph.nodes[result[0]].weight, graph.nodes[result[0]].time);
+        path.insertNode(index[1] + 2, graph.nodes[result[1]].id, graph.nodes[result[1]].weight, graph.nodes[result[1]].time);
+
+        return result;
+    }
+
+    function getIndex(path) {
+        let curr = path.head;
+        var index = [];
+        var count = 0;
+        while (curr) {
+            if (curr.id == path.lunch.id) {
+                index[0] = count;
+            }
+
+            if (curr.id == path.dinner.id) {
+                index[1] = count;
+                return index;
+            }
+
+            curr = curr.next;
+            count++;
+        }
+    }
+
+    function cutPath(path, time1, time2) {
+        let curr = path.head;
+        var node = [];
+        var flag = 0;
+        var cost = 0;
+        var condition = 0;
+        let prev;
+        while (curr) {
+
+
+            if (condition == 1) {
+                cost += getLink(prev, curr).cost + curr.time;
+            }
+
+            if (condition == 0) {
+                cost += curr.time;
+                condition = 1;
+            }
+
+            if (flag == 0 && cost > time1) {
+                path.lunch = curr;
+                cost = 0;
+                condition = 0;
+                flag = 1;
+            } else if (flag == 1 && cost > time2) {
+                path.dinner = curr;
+                break;
+            }
+
+            prev = curr;
+            curr = curr.next;
+
+        }
+
     }
 
     // Dijkstra shortest path: returns the minimum cost to travel from src to dest, don't care about the path
@@ -885,22 +990,53 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         return costs[dest.id];
     }
 
-    // hotel-selection: pick the closest one, no need to change hotel under a certain distance
+    // hotel-selection: pick the closest one
     function hotel_selection(graph, path) {
         var minCost = Infinity;
-        var desiredNode;
-        for (var i=0; i<graph.nodes.length; i++) {
-            if(graph.nodes[i].type === 'hotel') {
-                if(dijkstraMinCost(graph, path.tailNode(), graph.nodes[i]) < minCost) {
+        var hotelCandidates = [];
+
+        // find min-cost hotel
+        for (var i = 0; i < graph.nodes.length; i++) {
+            if (graph.nodes[i].type === 'hotel') {
+                if (dijkstraMinCost(graph, path.tailNode(), graph.nodes[i]) < minCost) {
                     minCost = dijkstraMinCost(graph, path.tailNode(), graph.nodes[i]);
-                    desiredNode = graph.nodes[i];
-                    console.log(desiredNode);
                 }
             }
         }
 
-        path.addNode(desiredNode.id, desiredNode.weight, desiredNode.time);
-        console.log(path);
+        // push node(s) with minCost to an array
+        for (var i = 0; i < graph.nodes.length; i++) {
+            if (graph.nodes[i].type === 'hotel') {
+                if (dijkstraMinCost(graph, path.tailNode(), graph.nodes[i]) === minCost) {
+                    hotelCandidates.push(graph.nodes[i]);
+                }
+            }
+        }
+
+        console.log(hotelCandidates);
+
+        // if the hotel is the only one, simply append
+        // if multiple hotel has min-cost, choose the one with max-weight
+        var maxWeight = 0;
+        var hotelWinner;
+        if(hotelCandidates.length === 1) {
+            hotelWinner = hotelCandidates[0];
+        } else {
+            for(var i=0; i<hotelCandidates.length; i++) {
+                if(hotelCandidates[i].weight > maxWeight) {
+                    maxWeight = hotelCandidates[i].weight;
+                    hotelWinner = hotelCandidates[i];
+                }
+            }
+        }
+        path.addNode(hotelWinner.id, hotelWinner.weight, hotelWinner.time);
+
+        console.log(hotelWinner);
+    }
+
+    // TODO: adjust hotel-selection to avoid constantly changing hotel and picking every other day
+    function adjustHotel(graph, path) {
+        
     }
 
 });
