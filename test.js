@@ -316,9 +316,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             poiIDX.addNode(graph.nodes[i].id, graph.nodes[i].weight, graph.nodes[i].time);
     }
 
-    // // generating all path array
-    // console.log(genAllPathArr()); 
-
     // // getting path from chosen weight
     // var max = getMaxWeight(genAllPathArr());
     // var Arr = [];
@@ -372,15 +369,8 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         console.log($(this).text().substr(3, 1));
     });
 
-    // test: dijkstraMinCost
-    let minCost = dijkstraMinCost(graph, graph.nodes[0], graph.nodes[6]);
-    console.log(minCost);
-
 
     // ----------------------------------------------------------------- //
-
-
-
 
 
     // ----------------------- self-defined graph functions -------------------- //
@@ -396,7 +386,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     // clean path box
     function clrPathBox() {
-        $("div #path-box").detach();
+        $("div #path-box").detach();ㄈ
     }
 
     // show all the first node of each first-day route
@@ -828,7 +818,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             nodeID = lowestCostNode(costs, processed);
         }
 
-        console.log(costs);
         return costs[dest.id];
     }
 
