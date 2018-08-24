@@ -401,11 +401,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             H = currH;
         }
 
-        // restaurant-selection & hotel-selection
-        var PATH = poiIDX.nodeIDX(4).down.down.path;
-        restaurant(PATH);
-        hotel_selection(graph, PATH);
-        console.log(PATH);
     };
 
     // path box click event
@@ -1036,7 +1031,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     // TODO: adjust hotel-selection to avoid constantly changing hotel and picking every other day
     function adjustHotel(graph, path) {
-        
+
     }
 
 });
