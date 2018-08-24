@@ -3,22 +3,206 @@
 <html>
 
 <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.js"></script>
-    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-    <link rel=stylesheet type="text/css" href="test.css">
-    <title>POI graph</title>
+    <!-- google font -->
+    <link href='//fonts.googleapis.com/earlyaccess/cwtexyen.css' rel='stylesheet'>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <!-- Head start from here -->
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <title>Trip Planner</title>
 </head>
 
 <body>
-    <div id="loader"></div>
-    <svg width="960" height="600" border="20px"></svg>
-    <select id="DayArray"></select>
-    <input type="button" id='Button' name="aa" value="確定">
-    <input type="button" id='start' name="aa" value="start">
+    <!-- head -->
+    <header class="masthead">
+        <div class="overlay"></div>
+        <!-- top menu -->
+        <nav class="navbar justify-content-between">
+            <a href="./index.html">
+                <img src="img/Logo.png" width="120" height="32" class="d-inline-block align-top" href="./index.html">
+            </a>
+            <div>
+                <div class="row">
+                    <div id="top-text">註冊</div>
+                    <div id="top-text">登入</div>
+                </div>
+            </div>
+        </nav>
+        <!-- end -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4" id="form-box">
+                    <h2 class="col-md-12 text-center" id="content">推薦獨一無二的旅程</h2>
+                    <div id="form-content">
+                        <div class="col-md-12" id="text">地區</div>
+                        <div class="input-group input-group-lg">
+                            <input type="text" class="col-md-12 form-control" placeholder="範例: 台北" aria-label="地區">
+                        </div>
+                        <div class="col-md-12" id="text">天數</div>
+                        <div class="input-group input-group-lg">
+                            <input type="text" id="days" class="col-md-12 form-control" placeholder="範例: 3" aria-label="天數">
+                        </div>
+                    </div>
+                    <div style="text-align:right;margin-top: 25px;" class="col-md-12">
+                        <button class="btn btn-primary" type="button" id="Go" data-toggle="tab" href="" href="">Go!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- end -->
+    <!-- Upper Menu -->
+    <div class="fixed-top" id="menu">
+        <nav class="navbar navbar-expand-sm navbar-white bg-white justify-content-between">
+            <!-- Image -->
+            <img src="img/Logo.png" width="150" height="40" class="d-inline-block align-top" alt="">
+            <!-- Input -->
+            <div class="col-5">
+                <form id="frm" class="input-group">
+                    <input type="text" class="form-control" placeholder="地區" aria-label="地區">
+                    <input type="text" id="days" class="form-control" placeholder="天數" aria-label="天數">
+                    <input type="text" class="form-control" placeholder="預算" aria-label="預算">
+                    <span class="input-group-btn">
+                            <nav class="nav nav-tabs">
+                         <button class="btn btn-secondary" type="button" id="Go" data-toggle="tab" href="#suggest"href="#suggest">Go!</button>
+                     </nav>
+                     </span>
+                </form>
+            </div>
+            <!---->
+            <div class="col">
+            </div>
+            <!-- Login and Money -->
+            <div class="btn-group">
+                <div class="btn-group">
+                    <button id="btnGroupDrop1" type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        TWD
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                        <a class="dropdown-item" href="#">USD</a>
+                        <a class="dropdown-item" href="#">貢丸幣</a>
+                    </div>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#login">
+                        登入
+                    </button>
+                </div>
+            </div>
+            <!---->
+        </nav>
+    </div>
+    <!---->
+    <!-- strengths -->
+    <section class="showcase">
+        <div class="container-fluid p-0">
+            <div class="row no-gutters">
+                <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url('img/1.jpg');"></div>
+                <div class="col-lg-6 order-lg-1 my-auto showcase-text">
+                    <h2>Automatic Trip Planning</h2>
+                    <p class="lead mb-0">一個消化不良的病人向醫生抱怨：我近來很不正常， 吃什麼拉什麼，吃黃瓜拉黃瓜，吃西瓜拉西瓜， 怎樣才能恢復正常呢？ 醫生沈默片刻說：那你只能吃屎了。
+                    </p>
+                </div>
+            </div>
+            <div class="row no-gutters">
+                <div class="col-lg-6 text-white showcase-img" style="background-image: url('img/2.jpg');"></div>
+                <div class="col-lg-6 my-auto showcase-text">
+                    <h2>Easy to Use &amp; Customize</h2>
+                    <p class="lead mb-0">有一次老師在改同學的考卷~ 看到小明寫了一句造句,他寫:我媽媽是一位六十多歲的老婦人~ 老師把它的“老”圈起來,寫著:多餘的 把考卷發下來後,小明訂正了考卷 老師看了差點昏倒 他改成,我媽媽是個六十多歲多餘的老婦人......
+                    </p>
+                </div>
+            </div>
+            <div class="row no-gutters">
+                <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url('img/3.jpg');"></div>
+                <div class="col-lg-6 order-lg-1 my-auto showcase-text">
+                    <h2>Time-Saving</h2>
+                    <p class="lead mb-0">期中考是回家後,媽媽問我考的怎麼樣, 兒子說:我就一道題目沒有填出來, 媽媽問:是什麼題目阿? 兒子說:有一道題問3乘以7得多少?我當時不管三七二十一就填了15
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end -->
+    <!-- developer -->
+    <section class="testimonials text-center bg-light">
+        <div class="container">
+            <h2 class="mb-5">Developer</h2>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                        <img class="img-fluid rounded-circle mb-3" src="img/ZZ.jpg" alt="">
+                        <h3>張哲</h3>
+                        <p class="font-weight-light mb-0">"某天，有一個人在門口一直不停的笑... 。"</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                        <img class="img-fluid rounded-circle mb-3" src="img/SJ.jpg" alt="">
+                        <h3>孫上智</h3>
+                        <p class="font-weight-light mb-0">"為什麼？"</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="testimonial-item mx-auto mb-5 mb-lg-0">
+                        <img class="img-fluid rounded-circle mb-3" src="img/XW.jpg" alt="">
+                        <h3>呂學維</h3>
+                        <p class="font-weight-light mb-0">"因為他在校門口。"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- end -->
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
+                    <ul class="list-inline mb-2">
+                        <li class="list-inline-item">
+                            <a href="#">About</a>
+                        </li>
+                        <li class="list-inline-item">&sdot;</li>
+                        <li class="list-inline-item">
+                            <a href="#">Contact</a>
+                        </li>
+                        <li class="list-inline-item">&sdot;</li>
+                        <li class="list-inline-item">
+                            <a href="#">Terms of Use</a>
+                        </li>
+                        <li class="list-inline-item">&sdot;</li>
+                        <li class="list-inline-item">
+                            <a href="#">Privacy Policy</a>
+                        </li>
+                    </ul>
+                    <p class="text-muted small mb-4 mb-lg-0">&copy; 2018 by 強哥得第一團隊. All rights reserved</p>
+                </div>
+                <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item mr-3">
+                            <a href="#">
+                                <i class="fa fa-facebook fa-2x fa-fw"></i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item mr-3">
+                            <a href="#">
+                                <i class="fa fa-twitter fa-2x fa-fw"></i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="#">
+                                <i class="fa fa-instagram fa-2x fa-fw"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- end -->
 </body>
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.10/lodash.min.js"></script>
-<script src="test.js" type="text/javascript"></script>
+<script src="index.js" type="text/javascript"></script>
 
 </html>
