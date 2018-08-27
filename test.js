@@ -434,7 +434,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
         } else {
             clrPathBox();
-            $('#choose').modal('hide');       
+            $('#choose').modal('hide');
         }
 
     })
@@ -442,21 +442,25 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     // trigger hotel/restaurant selection
     document.getElementById("genSchedule").onclick = function() {
         // transform 'Final' to path array 'FinalSchedule'
-        for(var i=0; i<Final.length; i++) {
+        for (var i = 0; i < Final.length; i++) {
             var path = new POIList();
-            for(var j=0; j<Final[i].length; j++) {
+            for (var j = 0; j < Final[i].length; j++) {
                 var node = getNodeByID(graph, Final[i][j]);
                 path.addNode(node.id, node.weight, node.time);
             }
             FinalSchedule.push(path);
         }
 
-        // perform hotel/restaurant selection
-        for(var i=0; i<FinalSchedule.length; i++) {
+        // perform restaurant selection
+        for (var i = 0; i < FinalSchedule.length; i++) {
             restaurant(FinalSchedule[i]);
-            hotel_selection(graph, FinalSchedule[i]);
         }
+
+        // perform hotel selection
+        hotel_selection(graph, FinalSchedule);
+
         console.log(FinalSchedule);
+
     }
 
 
@@ -916,7 +920,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         var i;
         var temp1, temp2, nodetemp;
         for (i = 0; i < graph.nodes.length; i++) {
-            if (graph.nodes[i].type == 'restaurant') {
+            if (graph.nodes[i].type === 'restaurant') {
                 temp1 = cost1;
                 cost1 = dijkstraMinCost(graph, path.lunch, graph.nodes[i]) + dijkstraMinCost(graph, path.lunch.next, graph.nodes[i]);
                 if (cost1 > temp1) { result[0] = i; }
@@ -1044,36 +1048,54 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         return costs[dest.id];
     }
 
-    // hotel-selection: pick the closest one
-    function hotel_selection(graph, path) {
-        var minCost = Infinity;
+    // hotel-selection: cost(prev_day, hotel) + cost(next_day, hotel) ----> min-cost 
+    // for trips on same region (small scale)
+    // not for cross-region
+    function hotel_selection(graph, scheduleArr) {
+        var hotels = [];
+        var cost_to_hotel_arr = [];
         var hotelCandidates = [];
+        var cost_to_hotel; // cost(prev_day, hotel) + cost(next_day, hotel)
 
-        // find min-cost hotel
+        // get all the hotels
         for (var i = 0; i < graph.nodes.length; i++) {
             if (graph.nodes[i].type === 'hotel') {
-                if (dijkstraMinCost(graph, path.tailNode(), graph.nodes[i]) < minCost) {
-                    minCost = dijkstraMinCost(graph, path.tailNode(), graph.nodes[i]);
-                }
+                hotels.push(graph.nodes[i]);
             }
         }
 
-        // push node(s) with minCost to an array
-        for (var i = 0; i < graph.nodes.length; i++) {
-            if (graph.nodes[i].type === 'hotel') {
-                if (dijkstraMinCost(graph, path.tailNode(), graph.nodes[i]) === minCost) {
-                    hotelCandidates.push(graph.nodes[i]);
-                }
+        // calculate cost_to_hotel between each day, for each hotel
+        // e.g. 3-day trip: hotelA -> [cost1 + cost2]  hotelB -> [cost1 + cost2]  hotelC -> [cost1 + cost2]
+        // e.g. 4-day trip: hotelA -> [cost1 + cost2 + cost3]  hotelB -> [cost1 + cost2 + cost3]  hotelC -> [cost1 + cost2 + cost3]
+        for (var i = 0; i < hotels.length; i++) {
+            cost_to_hotel = 0;
+            for (var j = 0; j < scheduleArr.length - 1; j++) {
+                // walk through everyday's path, calculate cost_to_hotel
+                cost_to_hotel += dijkstraMinCost(graph, scheduleArr[j].tailNode(), hotels[i]) + dijkstraMinCost(graph, hotels[i], scheduleArr[j + 1].head);
+            }
+            cost_to_hotel_arr.push(cost_to_hotel);
+        }
+
+        // get min-cost in cost_to_hotel_arr
+        var minCost = Infinity;
+        for(var i=0; i<cost_to_hotel_arr.length; i++) {
+            if(cost_to_hotel_arr[i] < minCost) {
+                minCost = cost_to_hotel_arr[i];
             }
         }
 
-        console.log(hotelCandidates);
+        // find all the candidates with minCost
+        for(var i=0; i<cost_to_hotel_arr.length; i++) {
+            if(cost_to_hotel_arr[i] == minCost) {
+                hotelCandidates.push(hotels[i]);
+            }
+        }
 
-        // if the hotel is the only one, simply append
-        // if multiple hotel has min-cost, choose the one with max-weight
+        // only option: then simply append to every day
+        // multiple candidates: pick the hotel with max-weight
         var maxWeight = 0;
         var hotelWinner;
-        if(hotelCandidates.length === 1) {
+        if(hotelCandidates.length == 1) {
             hotelWinner = hotelCandidates[0];
         } else {
             for(var i=0; i<hotelCandidates.length; i++) {
@@ -1083,15 +1105,14 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                 }
             }
         }
-        path.addNode(hotelWinner.id, hotelWinner.weight, hotelWinner.time);
 
-        console.log(hotelWinner);
-    }
-
-    // TODO: adjust hotel-selection to avoid constantly changing hotel and picking every other day
-    function adjustHotel(graph, path) {
+        //add hotel to final schedule
+        for(var i=0; i<scheduleArr.length; i++) {
+            scheduleArr[i].addNode(hotelWinner.id, hotelWinner.weight, hotelWinner.time);
+        }
 
     }
+
 
 });
 
