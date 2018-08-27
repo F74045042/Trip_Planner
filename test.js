@@ -197,7 +197,7 @@ var simulation = d3.forceSimulation()
     .force("charge", d3.forceManyBody().strength(-20))
     .force("center", d3.forceCenter(width / 2, height / 2))
     .force('collision', d3.forceCollide().radius(function(d) {
-        return d.weight
+        return d.weight;
     }));
 
 var tooltip = d3.select("body")
@@ -208,6 +208,7 @@ var tooltip = d3.select("body")
     .style("z-index", "10")
     .style("visibility", "hidden")
     .text("Text");
+
 
 
 // Loader
@@ -235,6 +236,7 @@ var opts = {
 };
 
 var spinner = new Spinner(opts).spin(target);
+
 
 d3.json("http://localhost:8000/test.json", function(error, graph) {
     if (error) throw error;
@@ -265,9 +267,13 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         .attr("class", "nodes")
         .selectAll("g")
         .data(graph.nodes)
-        .enter().append("g");
+        .enter().append("g")
+        .attr("class", function(d) {
+            return d.type + " node"
+        });
 
-    var circle = node.append("circle")
+
+    var circle = d3.selectAll(".tourist_attraction").append("circle")
         .attr("r", function(d) {
             return d.weight;
         })
@@ -279,8 +285,47 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             .on("drag", dragged)
             .on("end", dragended));
 
+
+    var rect = d3.selectAll(".restaurant").append("rect")
+        .attr("width", function(d) {
+            return d.weight;
+        })
+        .attr("height", function(d) {
+            return d.weight;
+        })
+        .attr("fill", function(d) {
+            return color(d.time);
+        })
+        .call(d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended));
+
+    var ellipse = d3.selectAll(".hotel").append("ellipse")
+        .attr("cx", function(d) {
+            return d.weight;
+        })
+        .attr("cy", function(d) {
+            return d.weight * 2;
+        })
+        .attr("rx", function(d) {
+            return d.weight;
+        })
+        .attr("ry", function(d) {
+            return d.weight * 2;
+        })
+        .attr("fill", function(d) {
+            return color(d.weight);
+        })
+        .call(d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended));
+
+
+
     // mouseover event
-    circle.on("mouseover", function(d) {
+    node.on("mouseover", function(d) {
             tooltip.style("color", "#FF6666FF")
             tooltip.text("Time=" + d.time);
             return tooltip.style("visibility", "visible");
@@ -291,6 +336,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         .on("mouseout", function() {
             return tooltip.style("visibility", "hidden");
         });
+
 
     // show ID beside node
     var label = node.append("text")
@@ -323,6 +369,22 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             });
 
         circle
+            .attr("cx", function(d) {
+                return d.x;
+            })
+            .attr("cy", function(d) {
+                return d.y;
+            });
+
+        rect
+            .attr("x", function(d) {
+                return d.x;
+            })
+            .attr("y", function(d) {
+                return d.y;
+            });
+
+        ellipse
             .attr("cx", function(d) {
                 return d.x;
             })
@@ -422,10 +484,10 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                 arr[i] = str.charAt(i);
             }
             Final[countDay] = arr;
-            console.log(Final);
+            // console.log(Final);
             reArr = remain(Final[countDay]);
             var max = getMaxWeight(reArr);
-            console.log(max);
+            // console.log(max);
             clrPathBox();
             addPathBox(max);
 
@@ -498,7 +560,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     function addChooseBox(start, max) {
         $("div #choose-box").detach();
         var Arr = getPathofMaxWeight(max);
-        console.log(Arr);
+        // console.log(Arr);
         var isStart = 0;
         var isShow = 0;
         var path = "";
@@ -705,7 +767,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         document.getElementById("DayArray").options.length = 0;
         select = document.getElementById('DayArray');
         for (index in DayArray) {
-
             select.add(new Option("path" + [index]));
         }
 
@@ -1078,15 +1139,15 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
         // get min-cost in cost_to_hotel_arr
         var minCost = Infinity;
-        for(var i=0; i<cost_to_hotel_arr.length; i++) {
-            if(cost_to_hotel_arr[i] < minCost) {
+        for (var i = 0; i < cost_to_hotel_arr.length; i++) {
+            if (cost_to_hotel_arr[i] < minCost) {
                 minCost = cost_to_hotel_arr[i];
             }
         }
 
         // find all the candidates with minCost
-        for(var i=0; i<cost_to_hotel_arr.length; i++) {
-            if(cost_to_hotel_arr[i] == minCost) {
+        for (var i = 0; i < cost_to_hotel_arr.length; i++) {
+            if (cost_to_hotel_arr[i] == minCost) {
                 hotelCandidates.push(hotels[i]);
             }
         }
@@ -1095,11 +1156,11 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         // multiple candidates: pick the hotel with max-weight
         var maxWeight = 0;
         var hotelWinner;
-        if(hotelCandidates.length == 1) {
+        if (hotelCandidates.length == 1) {
             hotelWinner = hotelCandidates[0];
         } else {
-            for(var i=0; i<hotelCandidates.length; i++) {
-                if(hotelCandidates[i].weight > maxWeight) {
+            for (var i = 0; i < hotelCandidates.length; i++) {
+                if (hotelCandidates[i].weight > maxWeight) {
                     maxWeight = hotelCandidates[i].weight;
                     hotelWinner = hotelCandidates[i];
                 }
@@ -1107,7 +1168,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         }
 
         //add hotel to final schedule
-        for(var i=0; i<scheduleArr.length; i++) {
+        for (var i = 0; i < scheduleArr.length; i++) {
             scheduleArr[i].addNode(hotelWinner.id, hotelWinner.weight, hotelWinner.time);
         }
 
@@ -1133,6 +1194,7 @@ var zoom = d3.zoom()
     });
 
 svg.call(zoom);
+
 
 function dragstarted(d) {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
