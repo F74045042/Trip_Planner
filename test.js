@@ -334,7 +334,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     //user input H
     var H;
     var Final = [];
-    var Day;
+    var Day = 0;
     var countDay = 0;
     var reArr;
 
@@ -383,7 +383,8 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     //ChooseBox click event
     $('#choose').on('click', '#choosen', function(e) {
-        if (countDay < Day - 1) {
+        if (countDay < Day) {
+            document.getElementById("day-select").innerHTML = "Day "+(countDay+1);
             var str = document.getElementById('choose-node').innerHTML + getUpperCase(document.getElementById('choose-content').innerHTML);
             var arr = [];
             for (var i = 0; i < str.length; i++) {
@@ -400,7 +401,8 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             $('#choose').modal('hide');
 
             countDay += 1;
-        } else {
+        }
+        if (countDay == Day) {
             clrPathBox();
             $('#choose').modal('hide');
         }
