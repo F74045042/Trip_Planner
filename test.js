@@ -274,7 +274,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         });
 
 
-    var circle = d3.selectAll(".tourist_attraction").append("circle")
+    var circle = node.append("circle")
         .attr("r", function(d) {
             return d.weight;
         })
@@ -287,41 +287,41 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             .on("end", dragended));
 
 
-    var rect = d3.selectAll(".restaurant").append("rect")
-        .attr("width", function(d) {
-            return d.weight;
-        })
-        .attr("height", function(d) {
-            return d.weight;
-        })
-        .attr("fill", function(d) {
-            return color(d.time);
-        })
-        .call(d3.drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended));
+    // var rect = d3.selectAll(".restaurant").append("rect")
+    //     .attr("width", function(d) {
+    //         return d.weight;
+    //     })
+    //     .attr("height", function(d) {
+    //         return d.weight;
+    //     })
+    //     .attr("fill", function(d) {
+    //         return color(d.time);
+    //     })
+    //     .call(d3.drag()
+    //         .on("start", dragstarted)
+    //         .on("drag", dragged)
+    //         .on("end", dragended));
 
-    var ellipse = d3.selectAll(".hotel").append("ellipse")
-        .attr("cx", function(d) {
-            return d.weight;
-        })
-        .attr("cy", function(d) {
-            return d.weight * 2;
-        })
-        .attr("rx", function(d) {
-            return d.weight;
-        })
-        .attr("ry", function(d) {
-            return d.weight * 2;
-        })
-        .attr("fill", function(d) {
-            return color(d.weight);
-        })
-        .call(d3.drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended));
+    // var ellipse = d3.selectAll(".hotel").append("ellipse")
+    //     .attr("cx", function(d) {
+    //         return d.weight;
+    //     })
+    //     .attr("cy", function(d) {
+    //         return d.weight * 2;
+    //     })
+    //     .attr("rx", function(d) {
+    //         return d.weight;
+    //     })
+    //     .attr("ry", function(d) {
+    //         return d.weight * 2;
+    //     })
+    //     .attr("fill", function(d) {
+    //         return color(d.weight);
+    //     })
+    //     .call(d3.drag()
+    //         .on("start", dragstarted)
+    //         .on("drag", dragged)
+    //         .on("end", dragended));
 
 
 
@@ -377,21 +377,21 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                 return d.y;
             });
 
-        rect
-            .attr("x", function(d) {
-                return d.x;
-            })
-            .attr("y", function(d) {
-                return d.y;
-            });
+        // rect
+        //     .attr("x", function(d) {
+        //         return d.x;
+        //     })
+        //     .attr("y", function(d) {
+        //         return d.y;
+        //     });
 
-        ellipse
-            .attr("cx", function(d) {
-                return d.x;
-            })
-            .attr("cy", function(d) {
-                return d.y;
-            });
+        // ellipse
+        //     .attr("cx", function(d) {
+        //         return d.x;
+        //     })
+        //     .attr("cy", function(d) {
+        //         return d.y;
+        //     });
 
         label
             .attr("x", function(d) {
@@ -490,7 +490,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                 arr[i] = str.charAt(i);
             }
             Final[countDay] = arr;
-            // console.log(Final);
+            console.log(Final);
             reArr = remain(Final[countDay]);
             var max = getMaxWeight(reArr);
             // console.log(max);
@@ -500,7 +500,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             $('#choose').modal('hide');
             countDay++;
 
-        } else {
+        }
+
+        if (countDay == Day) {
             clrPathBox();
             $('#choose').modal('hide');
         }
@@ -684,6 +686,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     // Reduce the opacity of all node but the best path
     // can be optimize: each node save its own index, don't have to search all node over and over again.
+    // not all circles now, needs to be fixed
     function showPath(path) {
         let curr = path.head;
         let d;
