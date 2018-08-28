@@ -3,6 +3,7 @@ function POIList() {
     this.length = 0;
     let lunch;
     let dinner;
+    let hotel;
 
     // --------------- member methods --------------- //
     this.insertNode = function(position, id, weight, time) {
@@ -179,7 +180,6 @@ function path(new_path, total_cost, total_weight, down) {
     this.total_weight = total_weight;
     this.down = down;
 }
-
 
 
 var svg = d3.select("svg"),
@@ -457,10 +457,15 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
             // clean path box(UI)
             clrPathBox();
+
+            // clean FinalArray & FinalScheduleArray
+            Final.length = 0;
+            FinalSchedule.length = 0;
+
             // generate path starting from each node and store under poiIDX
             for (var idx = 0; idx < poiIDX.length; idx++) {
                 var newPath = new POIList();
-                genPath(poiIDX.nodeIDX(idx), 250, newPath, idx);
+                genPath(poiIDX.nodeIDX(idx), 200, newPath, idx);
             }
             reArr = genAllPathArr();
             // add path box to suggest page
@@ -1170,6 +1175,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
         //add hotel to final schedule
         for (var i = 0; i < scheduleArr.length; i++) {
+            scheduleArr[i].hotel = hotelWinner;
             scheduleArr[i].addNode(hotelWinner.id, hotelWinner.weight, hotelWinner.time);
         }
 
