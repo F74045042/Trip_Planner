@@ -316,9 +316,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             poiIDX.addNode(graph.nodes[i].id, graph.nodes[i].weight, graph.nodes[i].time);
     }
 
-    // // generating all path array
-    // console.log(genAllPathArr()); 
-
     // // getting path from chosen weight
     // var max = getMaxWeight(genAllPathArr());
     // var Arr = [];
@@ -381,10 +378,10 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         addChooseBox($(this).text().substr(3, 1), getMaxWeight(reArr));
     });
 
-    //ChooseBox click event
+    // ChooseBox click event
     $('#choose').on('click', '#choosen', function(e) {
         if (countDay < Day) {
-            document.getElementById("day-select").innerHTML = "Day "+(countDay+1);
+            document.getElementById("day-select").innerHTML = "Day " + (countDay + 1);
             var str = document.getElementById('choose-node').innerHTML + getUpperCase(document.getElementById('choose-content').innerHTML);
             var arr = [];
             for (var i = 0; i < str.length; i++) {
@@ -399,24 +396,17 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             addPathBox(max);
 
             $('#choose').modal('hide');
-
-            countDay += 1;
+            countDay++;
         }
         if (countDay == Day) {
             clrPathBox();
             $('#choose').modal('hide');
         }
-    })
 
-    // test: dijkstraMinCost
-    let minCost = dijkstraMinCost(graph, graph.nodes[0], graph.nodes[6]);
-    console.log(minCost);
+    })
 
 
     // ----------------------------------------------------------------- //
-
-
-
 
 
     // ----------------------- self-defined graph functions -------------------- //
@@ -426,7 +416,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         for (var i = 0; i < str.length; i++) {
             c = str.charAt(i);
             if ((c >= 'A') && (c <= 'Z')) {
-                str2 += c
+                str2 += c;
             }
         }
         return str2;
@@ -919,7 +909,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             nodeID = lowestCostNode(costs, processed);
         }
 
-        console.log(costs);
         return costs[dest.id];
     }
 
