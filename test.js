@@ -7,30 +7,30 @@ function POIList() {
 
     // --------------- member methods --------------- //
     this.insertNode = function(position, id, weight, time) {
-        if (position >= 0 && position <= this.length) {
-            let newNode = new node(id, weight, time, null, null);
-            let curr = this.head;
-            let prev;
-            let idx = 0;
+            if (position >= 0 && position <= this.length) {
+                let newNode = new node(id, weight, time, null, null);
+                let curr = this.head;
+                let prev;
+                let idx = 0;
 
-            if (position == 0) {
-                newNode.next = curr;
-                this.head = newNode;
-            } else {
-                while (idx++ < position) {
-                    prev = curr;
-                    curr = curr.next;
+                if (position == 0) {
+                    newNode.next = curr;
+                    this.head = newNode;
+                } else {
+                    while (idx++ < position) {
+                        prev = curr;
+                        curr = curr.next;
+                    }
+                    newNode.next = curr;
+                    prev.next = newNode;
                 }
-                newNode.next = curr;
-                prev.next = newNode;
+                this.length++;
+            } else {
+                console.log("out of index");
             }
-            this.length++;
-        } else {
-            console.log("out of index");
-        }
 
-    }
-    // append poi node
+        }
+        // append poi node
     this.addNode = function(id, weight, time) {
         const newNode = new node(id, weight, time, null, null);
         let curr;
@@ -279,7 +279,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             return d.weight;
         })
         .attr("fill", function(d) {
-            return color(d.time);
+            return color(d.type);
         })
         .call(d3.drag()
             .on("start", dragstarted)
@@ -445,6 +445,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         // document.getElementById("myTab").style.visibility="hidden";
 
         Day = getValue();
+        countDay = 0;
 
         // jump to suggest page
         $('#page2-tab').tab('show');
@@ -509,6 +510,11 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     })
 
+    //Show Path on click
+    $('#card-area').on('click', '.card-link', function(e) {
+        showPath(FinalSchedule[e.currentTarget.id])
+    })
+
     // trigger hotel/restaurant selection
     document.getElementById("genSchedule").onclick = function() {
         // transform 'Final' to path array 'FinalSchedule'
@@ -528,6 +534,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
         // perform hotel selection
         hotel_selection(graph, FinalSchedule);
+
+        //Day Card appear in planning page.
+        addDayCard(FinalSchedule);
 
         console.log(FinalSchedule);
 
@@ -562,6 +571,31 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     // clean path box
     function clrPathBox() {
         $("div #path-box").detach();
+    }
+
+    //show Day Card
+    function addDayCard(path) {
+        $('div .card').detach();
+        var start = "";
+        var str = "";
+        let curr;
+        for (var i = 0; i < Day; i++) {
+            curr = path[i].head;
+            while (curr) {
+                str += curr.id;
+                curr = curr.next;
+                if (curr) {
+                    str += "->";
+                }
+            }
+            // console.log(str);
+            $('#card-area').append("<div class=\"card\" style=\"width: 20rem; margin-right: 5rem; margin-bottom: 1rem;\">" +
+                "<div class=\"card-body\">" +
+                "<h5 class=\"card-title\">Day " + (i+1) + "</h5><div class=\"row justify-content-between\" id=\"choose-box\">" +
+                "<h3 id=\"choose-node\">" + str.substr(0, 1) + "</h3><div id=\"choose-content\" style=\"margin-right: 10%;\">" + str.substr(3) + "</div></div>" +
+                "<a href=\"#\" class=\"card-link\" id=" + i + ">Show Path</a></div></div>");
+            str = "";
+        }
     }
 
     //show all the path of choosen node
@@ -690,6 +724,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     function showPath(path) {
         let curr = path.head;
         let d;
+        let line;
         circle.style("opacity", 0.1);
         link.style("opacity", 0.1);
         while (curr) {
@@ -706,8 +741,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             // console.log(d);
             curr = curr.next;
             //change line opacity
-            if (curr) {
-                getLine(d.__data__.id, curr.id).style.opacity = 1;
+            line = getLine(d.__data__.id, curr.id);
+            if (curr && line) {
+                line.style.opacity = 1;
             }
         }
     }

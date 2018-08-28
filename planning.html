@@ -71,7 +71,22 @@
             <div class="tab-content" id="nav-tabContent">
                 <div class="tab-pane fade show active" id="planning" role="tabpanel" aria-labelledby="page1-tab">
                     <h1>行程</h1>
-                    <svg id="loader" width="960" height="600">
+                    <div class="row justify-content-between">
+                        <svg id="loader" width="640" height="450">
+                            <div id="card-area">
+                                <!-- Day card -->
+<!--                                 <div class="card" style="width: 20rem; margin-right: 5rem;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Day 1</h5>
+                                        <div class="row justify-content-between" id="choose-box">
+                                            <h3 id="choose-node">start</h3>
+                                            <div id="choose-content" style="margin-right: 10%;">path</div>
+                                        </div>
+                                        <a href="#" class="card-link" onclick="showPath()">Show Path</a>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </svg>
                         <!-- <text x="10" y="30" style="fill:blue;font-size:24px;">
                             ELLIPSE: hotels
                         </text>
@@ -81,7 +96,7 @@
                         <text x="10" y="70" style="fill:red;font-size:24px;">
                             RECT: restaurants
                         </text> -->
-                    </svg>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="suggest" role="tabpanel" aria-labelledby="page2-tab">
                     <h1 id="day-select">建議</h1>
