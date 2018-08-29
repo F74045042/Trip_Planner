@@ -535,10 +535,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         // perform hotel selection
         hotel_selection(graph, FinalSchedule);
 
-        //Day Card appear in planning page.
+        // Day Card appear in planning page.
         addDayCard(FinalSchedule);
 
-        console.log(FinalSchedule);
 
     }
 
