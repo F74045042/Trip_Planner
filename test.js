@@ -980,7 +980,10 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     // returns unprocessed, lowest-cost node
     function lowestCostNode(costs, processed) {
-        delete costs["0"]; // removing some extra stuff
+        // remove some extra stuff
+        delete costs["0"];
+        delete costs["1"];
+        delete costs["2"];
         return Object.keys(costs).reduce((lowest, node) => {
             if (lowest === null || costs[node] < costs[lowest]) {
                 if (!processed.includes(node)) {
@@ -1104,7 +1107,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     }
 
-    // Dijkstra shortest path: returns the minimum cost to travel from src to dest, don't care about the path
+    // Dijkstra shortest path: returns the minimum cost to travel from src to dest & the optimal path
     function dijkstraMinCost(graph, src, dest) {
         // add destination and cost = INF
         // add source and cost = 0
@@ -1113,6 +1116,10 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
         costs = Object.assign(costs, src.id);
         costs[src.id] = 0;
+
+        // for optimal path
+        var parents = Object.assign({}, dest.id);
+        parents[dest.id]
 
 
         // add the neighbors of source and their costs
