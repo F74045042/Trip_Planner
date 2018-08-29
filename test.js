@@ -1001,11 +1001,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     // check connectivity between nodes
     function connected(node1, node2) {
         // check connectivity 
-        console.log(node1.id);
-        console.log(node1);
-        //console.log("996");
         for (var i = 0; i < graph.links.length; i++) {
-
             // source = node1 && target = node2 OR vice versa
             if ((graph.links[i].source.id == node1.id && graph.links[i].target.id == node2.id) ||
                 (graph.links[i].target.id == node1.id && graph.links[i].source.id == node2.id))
@@ -1016,6 +1012,8 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     // returns unprocessed, lowest-cost node
     function lowestCostNode(costs, processed) {
+        delete costs["2"];
+        delete costs["1"];
         delete costs["0"]; // removing some extra stuff
         return Object.keys(costs).reduce((lowest, node) => {
             if (lowest === null || costs[node] < costs[lowest]) {
@@ -1154,10 +1152,10 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         costs = Object.assign(costs, src.id);
         costs[src.id] = 0;
 
+        console.log(costs);
 
         // add the neighbors of source and their costs
         for (var i = 0; i < graph.nodes.length; i++) {
-            console.log(src);
             if (connected(src, graph.nodes[i])) {
                 costs = Object.assign(costs, graph.nodes[i].id);
                 costs[graph.nodes[i].id] = getLink(src, graph.nodes[i]).cost;
@@ -1169,13 +1167,11 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         const processed = [];
 
         let nodeID = lowestCostNode(costs, processed);
-        //console.log(nodeID);
         while (nodeID) {
             let cost = costs[nodeID];
             let node = getNodeByID(graph, nodeID);
 
             for (var i = 0; i < graph.nodes.length; i++) {
-
                 
                 if (connected(node, graph.nodes[i])) {
                     let newCost = cost + getLink(node, graph.nodes[i]).cost;
