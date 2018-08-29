@@ -7,30 +7,30 @@ function POIList() {
 
     // --------------- member methods --------------- //
     this.insertNode = function(position, id, weight, time) {
-            if (position >= 0 && position <= this.length) {
-                let newNode = new node(id, weight, time, null, null);
-                let curr = this.head;
-                let prev;
-                let idx = 0;
+        if (position >= 0 && position <= this.length) {
+            let newNode = new node(id, weight, time, null, null);
+            let curr = this.head;
+            let prev;
+            let idx = 0;
 
-                if (position == 0) {
-                    newNode.next = curr;
-                    this.head = newNode;
-                } else {
-                    while (idx++ < position) {
-                        prev = curr;
-                        curr = curr.next;
-                    }
-                    newNode.next = curr;
-                    prev.next = newNode;
-                }
-                this.length++;
+            if (position == 0) {
+                newNode.next = curr;
+                this.head = newNode;
             } else {
-                console.log("out of index");
+                while (idx++ < position) {
+                    prev = curr;
+                    curr = curr.next;
+                }
+                newNode.next = curr;
+                prev.next = newNode;
             }
-
+            this.length++;
+        } else {
+            console.log("out of index");
         }
-        // append poi node
+
+    }
+    // append poi node
     this.addNode = function(id, weight, time) {
         const newNode = new node(id, weight, time, null, null);
         let curr;
@@ -238,7 +238,6 @@ var opts = {
 
 var spinner = new Spinner(opts).spin(target);
 
-
 d3.json("http://localhost:8000/test.json", function(error, graph) {
     if (error) throw error;
 
@@ -285,44 +284,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             .on("start", dragstarted)
             .on("drag", dragged)
             .on("end", dragended));
-
-
-    // var rect = d3.selectAll(".restaurant").append("rect")
-    //     .attr("width", function(d) {
-    //         return d.weight;
-    //     })
-    //     .attr("height", function(d) {
-    //         return d.weight;
-    //     })
-    //     .attr("fill", function(d) {
-    //         return color(d.time);
-    //     })
-    //     .call(d3.drag()
-    //         .on("start", dragstarted)
-    //         .on("drag", dragged)
-    //         .on("end", dragended));
-
-    // var ellipse = d3.selectAll(".hotel").append("ellipse")
-    //     .attr("cx", function(d) {
-    //         return d.weight;
-    //     })
-    //     .attr("cy", function(d) {
-    //         return d.weight * 2;
-    //     })
-    //     .attr("rx", function(d) {
-    //         return d.weight;
-    //     })
-    //     .attr("ry", function(d) {
-    //         return d.weight * 2;
-    //     })
-    //     .attr("fill", function(d) {
-    //         return color(d.weight);
-    //     })
-    //     .call(d3.drag()
-    //         .on("start", dragstarted)
-    //         .on("drag", dragged)
-    //         .on("end", dragended));
-
 
 
     // mouseover event
@@ -377,22 +338,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                 return d.y;
             });
 
-        // rect
-        //     .attr("x", function(d) {
-        //         return d.x;
-        //     })
-        //     .attr("y", function(d) {
-        //         return d.y;
-        //     });
-
-        // ellipse
-        //     .attr("cx", function(d) {
-        //         return d.x;
-        //     })
-        //     .attr("cy", function(d) {
-        //         return d.y;
-        //     });
-
         label
             .attr("x", function(d) {
                 return d.x;
@@ -414,17 +359,11 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             poiIDX.addNode(graph.nodes[i].id, graph.nodes[i].weight, graph.nodes[i].time);
     }
 
-    // // getting path from chosen weight
-    // var max = getMaxWeight(genAllPathArr());
-    // var Arr = [];
-    // //all route
-    // var Result = [];
-    // //走過的點
-    // var temp = [];
-    // //使用者選的
-    // var chosen = [];
-    // //天數紀錄
-    // var i = 0;
+    // test: dijkstra
+    console.log(graph.nodes[2].id);
+    console.log(graph.nodes[10].id);
+    dijkstra(graph, graph.nodes[2], graph.nodes[10]);
+
 
     //user input H
     var H;
@@ -433,11 +372,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     var countDay = 0;
     var reArr;
     var FinalSchedule = []; // with hotel & restaurant
-
-    // //start button generate the first dropdownlist
-    // document.getElementById("start").onclick = function() { Gen1() };
-    // //for user to choose the route they want then generate next day route
-    // document.getElementById("Button").onclick = function() { Gen() };
 
     // Go button click call initRcmd function
     document.getElementById("Go").onclick = function() {
@@ -478,20 +412,31 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     // path box click event
     $('#recommend').on('click', '#path-box', function(e) {
-        console.log($(this).text().substr(3, 1));
-        addChooseBox($(this).text().substr(3, 1), getMaxWeight(reArr));
+        addChooseBox(getStr($(this).text()), getMaxWeight(reArr));
     });
 
     // ChooseBox click event
     $('#choose').on('click', '#choosen', function(e) {
         if (countDay < Day) {
+            console.log(document.getElementById('choose-node').innerHTML);
             document.getElementById("day-select").innerHTML = "Day " + (countDay + 1);
             var str = document.getElementById('choose-node').innerHTML + getUpperCase(document.getElementById('choose-content').innerHTML);
+            str = str.replace(/\s+/g, "");
             var arr = [];
+            var temp = "";
+            var j = 0,
+                k = 0;
             for (var i = 0; i < str.length; i++) {
-                arr[i] = str.charAt(i);
+                temp += str.charAt(i);
+                if ((str.charAt(i + 1) == 'P') || (i == str.length - 1)) {
+                    arr[j] = temp;
+                    j = j + 1;
+                    temp = "";
+                }
             }
             Final[countDay] = arr;
+
+            //console.log(str);
             console.log(Final);
             reArr = remain(Final[countDay]);
             var max = getMaxWeight(reArr);
@@ -512,7 +457,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     //Show Path on click
     $('#card-area').on('click', '.card-link', function(e) {
-        showPath(FinalSchedule[e.currentTarget.id])
+        showPath(FinalSchedule[e.currentTarget.id]);
     })
 
     // trigger hotel/restaurant selection
@@ -538,8 +483,8 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         // Day Card appear in planning page.
         addDayCard(FinalSchedule);
 
-
     }
+
 
 
     // ----------------------------------------------------------------- //
@@ -549,14 +494,38 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     function getUpperCase(str) {
         var str2 = "";
+
         for (var i = 0; i < str.length; i++) {
             c = str.charAt(i);
-            if ((c >= 'A') && (c <= 'Z')) {
+            if (((c >= 'A') && (c <= 'Z')) || ((c >= 0) && (c <= 9))) {
                 str2 += c;
             }
         }
+        str = str.split(" ");
+        console.log(str2);
         return str2;
     }
+
+    function getStr(str) {
+        var str2 = str.substr(3, 2);
+        c = str.charAt(5);
+        if ((c >= 0) && (c <= 9)) {
+            str2 += c;
+        }
+        str2 = str2.replace(/\s+/g, "");
+        return str2;
+    }
+
+    function getStr2(str) {
+        var str2 = str.substr(0, 2);
+        c = str.charAt(2);
+        if ((c >= 0) && (c <= 9)) {
+            str2 += c;
+        }
+        console.log(str2);
+        return str2;
+    }
+
 
     //clean POIList
     function clrPOIList(POIList) {
@@ -590,8 +559,8 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             // console.log(str);
             $('#card-area').append("<div class=\"card\" style=\"width: 20rem; margin-right: 5rem; margin-bottom: 1rem;\">" +
                 "<div class=\"card-body\">" +
-                "<h5 class=\"card-title\">Day " + (i+1) + "</h5><div class=\"row justify-content-between\" id=\"choose-box\">" +
-                "<h3 id=\"choose-node\">" + str.substr(0, 1) + "</h3><div id=\"choose-content\" style=\"margin-right: 10%;\">" + str.substr(3) + "</div></div>" +
+                "<h5 class=\"card-title\">Day " + (i + 1) + "</h5><div class=\"row justify-content-between\" id=\"choose-box\">" +
+                "</h3><div id=\"choose-content\" \"text-align:left\">" + str + "</div></div>" +
                 "<a href=\"#\" class=\"card-link\" id=" + i + ">Show Path</a></div></div>");
             str = "";
         }
@@ -601,19 +570,21 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     function addChooseBox(start, max) {
         $("div #choose-box").detach();
         var Arr = getPathofMaxWeight(max);
-        // console.log(Arr);
+        //console.log(Arr);
+        //console.log(start);
         var isStart = 0;
         var isShow = 0;
         var path = "";
         for (var i = 0; i < Arr.length; i++) {
             if (Arr[i][0] == start) {
+                //console.log(Arr[i][0]);
                 for (var j = 1; j < Arr[i].length; j++) {
                     path += " -> " + Arr[i][j];
                 }
                 isShow = 0;
                 isStart = 1;
             }
-            console.log(path);
+            //console.log(path);
             if (isStart == 1 && isShow == 0) {
                 $("#choose-body").append("<div class=\"row justify-content-between\" id=\"choose-box\">" +
                     "<h3 id=" + "choose-node>" + start + "</h3>" + "<div id=" + "choose-content>" + path + "</div>" +
@@ -628,7 +599,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     function addPathBox(max) {
         // get first day route
         var Arr = getPathofMaxWeight(max);
-        console.log(Arr);
+        //console.log(Arr);
         var tmp = Arr[0][0];
         var num = 0;
         // get the first node of each first-day route
@@ -638,7 +609,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                     "<div class=" + "col-md-2 col-md-offset-2" + " id=" + "path-box" + " data-toggle=" + "modal" + " data-target=" + "#choose>" +
                     "<div id=" + "content" + ">出發地</div>" +
                     "<h3 id=" + "node" + ">" + tmp + "</h3>" +
-                    "<div id=" + "count" + ">" + num + "</div>" +
+                    "<div id=" + "count" + ">" + " " + num + "</div>" +
                     "<div id=" + "\"count\"" + "style=" + "\"color: gray;margin-right: 15px;\"" + ">選項</div></div>");
                 tmp = Arr[i][0];
                 num = 0;
@@ -648,7 +619,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         $("#recommend").append("<div class=" + "col-md-2 col-md-offset-2" + " id=" + "path-box" + " data-toggle=" + "modal" + " data-target=" + "#choose>" +
             "<div id=" + "content" + ">出發地</div>" +
             "<h3 id=" + "node" + ">" + tmp + "</h3>" +
-            "<div id=" + "count" + ">" + num + "</div>" +
+            "<div id=" + "count" + ">" + " " + num + "</div>" +
             "<div id=" + "\"count\"" + "style=" + "\"color: gray;margin-right: 15px;\"" + ">選項</div></div>");
     }
 
@@ -690,6 +661,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         return null;
     }
 
+    function removeAllSpace(str) {
+        return str.replace(/\s+/g, "");
+    }
     // generate all path with total_cost(link.cost + node.time) under a given threshold from a certain start point  
     // only consider nodes that are of type "tourist_attraction"
     function genPath(node, threshold, newPath, idx) {
@@ -727,24 +701,39 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         circle.style("opacity", 0.1);
         link.style("opacity", 0.1);
         while (curr) {
-            //change node opacity
+            // change node opacity
             for (var i = 0; i < graph.nodes.length; i++) {
                 d = d3.selectAll("circle")._groups[0][i];
                 if (d.__data__.id == curr.id) {
-                    console.log(curr.id);
+                    // console.log(curr.id);
                     d.style.opacity = 1;
                     break;
                 }
             }
             // console.log(curr);
             // console.log(d);
+
             curr = curr.next;
-            //change line opacity
+
+            // change line opacity (for nodes that are directly connected)
             line = getLine(d.__data__.id, curr.id);
-            if (curr && line) {
+            if (line) {
                 line.style.opacity = 1;
             }
+
+            // for nodes that are not directly connected
+            if (!line) {
+                let optPath = dijkstra(graph, getNodeByID(graph, d.__data__.id), getNodeByID(graph, curr.id)).pathArr;
+                line = getLine(d.__data__.id, optPath[0]);
+                line.style.opacity = 1;
+                for (var i = 0; i < optPath.length - 1; i++) {
+                    line = getLine(optPath[i], optPath[i + 1]);
+                    line.style.opacity = 1;
+                }
+            }
+
         }
+
     }
 
     // convert path objects list to array and sort by weight, then return the sorted array
@@ -969,7 +958,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     function connected(node1, node2) {
         // check connectivity 
         for (var i = 0; i < graph.links.length; i++) {
-
             // source = node1 && target = node2 OR vice versa
             if ((graph.links[i].source.id == node1.id && graph.links[i].target.id == node2.id) ||
                 (graph.links[i].target.id == node1.id && graph.links[i].source.id == node2.id))
@@ -1026,19 +1014,21 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             cost2 = 0;
         var result = [];
         var i;
+        //console.log(path);
         var temp1, temp2, nodetemp;
         for (i = 0; i < graph.nodes.length; i++) {
             if (graph.nodes[i].type === 'restaurant') {
                 temp1 = cost1;
-                cost1 = dijkstraMinCost(graph, path.lunch, graph.nodes[i]) + dijkstraMinCost(graph, path.lunch.next, graph.nodes[i]);
+                cost1 = dijkstra(graph, path.lunch, graph.nodes[i]).minCost + dijkstra(graph, path.lunch.next, graph.nodes[i]).minCost;
+
                 if (cost1 > temp1) { result[0] = i; }
 
                 if (path.dinner.next == null) {
                     temp2 = cost2;
-                    cost2 = dijkstraMinCost(graph, path.dinner, graph.nodes[i]);
+                    cost2 = dijkstra(graph, path.dinner, graph.nodes[i]).minCost;
                 } else {
                     temp2 = cost2;
-                    cost2 = dijkstraMinCost(graph, path.dinner, graph.nodes[i]) + dijkstraMinCost(graph, path.dinner.next, graph.nodes[i]);
+                    cost2 = dijkstra(graph, path.dinner, graph.nodes[i]).minCost + dijkstra(graph, path.dinner.next, graph.nodes[i]).minCost;
                 }
 
                 if (cost2 > temp2) { result[1] = i; }
@@ -1108,19 +1098,22 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     }
 
     // Dijkstra shortest path: returns the minimum cost to travel from src to dest & the optimal path
-    function dijkstraMinCost(graph, src, dest) {
+    function dijkstra(graph, src, dest) {
         // add destination and cost = INF
         // add source and cost = 0
-        var costs = Object.assign({}, dest.id);
+        var costs = {};
         costs[dest.id] = Infinity;
-
-        costs = Object.assign(costs, src.id);
         costs[src.id] = 0;
 
         // for optimal path
-        var parents = Object.assign({}, dest.id);
-        parents[dest.id]
-
+        var parents = {};
+        parents[dest.id] = null;
+        for (var i = 0; i < graph.nodes.length; i++) {
+            if (connected(graph.nodes[i], src)) {
+                // add src as these nodes' parent
+                parents[graph.nodes[i].id] = src.id;
+            }
+        }
 
         // add the neighbors of source and their costs
         for (var i = 0; i < graph.nodes.length; i++) {
@@ -1135,20 +1128,22 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         const processed = [];
 
         let nodeID = lowestCostNode(costs, processed);
-
         while (nodeID) {
             let cost = costs[nodeID];
             let node = getNodeByID(graph, nodeID);
 
             for (var i = 0; i < graph.nodes.length; i++) {
+
                 if (connected(node, graph.nodes[i])) {
                     let newCost = cost + getLink(node, graph.nodes[i]).cost;
                     if (!costs[graph.nodes[i].id]) {
                         costs[graph.nodes[i].id] = newCost;
+                        parents[graph.nodes[i].id] = node.id;
                     }
 
                     if (costs[graph.nodes[i].id] > newCost) {
                         costs[graph.nodes[i].id] = newCost;
+                        parents[graph.nodes[i].id] = node.id;
                     }
                 }
             }
@@ -1157,7 +1152,23 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             nodeID = lowestCostNode(costs, processed);
         }
 
-        return costs[dest.id];
+        // get optimal path, trace destination node's parent
+        let optPath = [];
+        optPath.push(dest.id);
+        let parentID = parents[dest.id];
+        while (parentID != src.id) {
+            optPath.push(parentID);
+            parentID = parents[parentID];
+        }
+
+        optPath.reverse(); //correct order
+
+        const results = {
+            minCost: costs[dest.id],
+            pathArr: optPath
+        };
+        console.log(results);
+        return results;
     }
 
     // hotel-selection: cost(prev_day, hotel) + cost(next_day, hotel) ----> min-cost 
@@ -1183,7 +1194,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             cost_to_hotel = 0;
             for (var j = 0; j < scheduleArr.length - 1; j++) {
                 // walk through everyday's path, calculate cost_to_hotel
-                cost_to_hotel += dijkstraMinCost(graph, scheduleArr[j].tailNode(), hotels[i]) + dijkstraMinCost(graph, hotels[i], scheduleArr[j + 1].head);
+                cost_to_hotel += dijkstra(graph, scheduleArr[j].tailNode(), hotels[i]).minCost + dijkstra(graph, hotels[i], scheduleArr[j + 1].head).minCost;
             }
             cost_to_hotel_arr.push(cost_to_hotel);
         }
