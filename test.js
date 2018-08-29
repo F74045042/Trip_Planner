@@ -238,7 +238,7 @@ var opts = {
 
 var spinner = new Spinner(opts).spin(target);
 
-d3.json("http://localhost:8000/test.json", function(error, graph) {
+d3.json("http://127.0.0.1:8000/Desktop/Trip_Planner-master/test.json", function(error, graph) {
     if (error) throw error;
 
     // stop loader
@@ -372,6 +372,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     var countDay = 0;
     var reArr;
     var FinalSchedule = []; // with hotel & restaurant
+
+    var rest = [];
+    var restcount = 0;
 
     // Go button click call initRcmd function
     document.getElementById("Go").onclick = function() {
@@ -1017,11 +1020,17 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         //console.log(path);
         var temp1, temp2, nodetemp;
         for (i = 0; i < graph.nodes.length; i++) {
-            if (graph.nodes[i].type === 'restaurant') {
+            if ((graph.nodes[i].type === 'restaurant') && restcheck(i)) {
                 temp1 = cost1;
                 cost1 = dijkstra(graph, path.lunch, graph.nodes[i]).minCost + dijkstra(graph, path.lunch.next, graph.nodes[i]).minCost;
 
-                if (cost1 > temp1) { result[0] = i; }
+                if (cost1 > temp1) { result[0] = i; rest[restcount] = i;}   
+            }
+        }
+        restcount = restcount + 1;
+
+        for (i = 0; i < graph.nodes.length; i++) {
+            if ((graph.nodes[i].type === 'restaurant') && restcheck(i)) {
 
                 if (path.dinner.next == null) {
                     temp2 = cost2;
@@ -1030,16 +1039,24 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                     temp2 = cost2;
                     cost2 = dijkstra(graph, path.dinner, graph.nodes[i]).minCost + dijkstra(graph, path.dinner.next, graph.nodes[i]).minCost;
                 }
-
-                if (cost2 > temp2) { result[1] = i; }
+                if (cost2 > temp2) { result[1] = i; rest[restcount] = i;}
             }
         }
+
+        restcount = restcount + 1;
 
         var index = getIndex(path);
         path.insertNode(index[0] + 1, graph.nodes[result[0]].id, graph.nodes[result[0]].weight, graph.nodes[result[0]].time);
         path.insertNode(index[1] + 2, graph.nodes[result[1]].id, graph.nodes[result[1]].weight, graph.nodes[result[1]].time);
 
         return result;
+    }
+
+    function restcheck(d){
+        for (var i = 0 ; i < rest.length ; i++){
+            if (d == rest[i]){return false}
+        }
+        return true;
     }
 
     function getIndex(path) {
