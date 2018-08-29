@@ -57,7 +57,7 @@
         {
             "id": "P10",
             "weight": 2,
-            "time": 70,
+            "time": 55,
             "type": "tourist_attraction"
         },
         {
@@ -74,36 +74,84 @@
         },
         {
             "id": "R1",
-            "weight": 7,
+            "weight": 5,
             "time": 45,
             "type": "restaurant"
         },
         {
             "id": "R2",
-            "weight": 3,
-            "time": 70,
+            "weight": 5,
+            "time": 60,
             "type": "restaurant"
         },
         {
             "id": "R3",
-            "weight": 6,
+            "weight": 5,
             "time": 50,
             "type": "restaurant"
         },
         {
             "id": "R4",
-            "weight": 10,
+            "weight": 5,
             "time": 40,
             "type": "restaurant"
         },
         {
             "id": "R5",
-            "weight": 9,
-            "time": 30,
+            "weight": 5,
+            "time": 50,
             "type": "restaurant"
         },
         {
             "id": "R6",
+            "weight": 5,
+            "time": 45,
+            "type": "restaurant"
+        },
+        {
+            "id": "R7",
+            "weight": 5,
+            "time": 45,
+            "type": "restaurant"
+        },
+        {
+            "id": "R8",
+            "weight": 5,
+            "time": 40,
+            "type": "restaurant"
+        },
+        {
+            "id": "R9",
+            "weight": 5,
+            "time": 55,
+            "type": "restaurant"
+        },
+        {
+            "id": "R10",
+            "weight": 5,
+            "time": 45,
+            "type": "restaurant"
+        },
+        {
+            "id": "R11",
+            "weight": 5,
+            "time": 30,
+            "type": "restaurant"
+        },
+        {
+            "id": "R12",
+            "weight": 5,
+            "time": 65,
+            "type": "restaurant"
+        },
+        {
+            "id": "R13",
+            "weight": 5,
+            "time": 30,
+            "type": "restaurant"
+        },
+        {
+            "id": "R14",
             "weight": 5,
             "time": 65,
             "type": "restaurant"
@@ -386,7 +434,7 @@
         },
         {
             "source": "R2",
-            "target": "R4",
+            "target": "P4",
             "cost": 5
         },
         {
@@ -406,7 +454,7 @@
         },
         {
             "source": "R3",
-            "target": "R1",
+            "target": "P1",
             "cost": 5
         },
         {
@@ -440,8 +488,123 @@
             "cost": 10
         },
         {
-            "source": "R6",
+            "source": "R7",
+            "target": "P3",
+            "cost": 15
+        },
+        {
+            "source": "R7",
+            "target": "P6",
+            "cost": 10
+        },
+        {
+            "source": "R7",
             "target": "P8",
+            "cost": 15
+        },
+        {
+            "source": "R8",
+            "target": "P11",
+            "cost": 15
+        },
+        {
+            "source": "R8",
+            "target": "P14",
+            "cost": 10
+        },
+        {
+            "source": "R8",
+            "target": "P1",
+            "cost": 15
+        },
+        {
+            "source": "R9",
+            "target": "P14",
+            "cost": 15
+        },
+        {
+            "source": "R9",
+            "target": "P12",
+            "cost": 10
+        },
+        {
+            "source": "R9",
+            "target": "P3",
+            "cost": 15
+        },
+        {
+            "source": "R10",
+            "target": "P2",
+            "cost": 15
+        },
+        {
+            "source": "R10",
+            "target": "P10",
+            "cost": 10
+        },
+        {
+            "source": "R10",
+            "target": "P6",
+            "cost": 15
+        },
+        {
+            "source": "R11",
+            "target": "P12",
+            "cost": 15
+        },
+        {
+            "source": "R11",
+            "target": "P8",
+            "cost": 10
+        },
+        {
+            "source": "R11",
+            "target": "P1",
+            "cost": 15
+        },
+        {
+            "source": "R12",
+            "target": "P1",
+            "cost": 15
+        },
+        {
+            "source": "R12",
+            "target": "P7",
+            "cost": 10
+        },
+        {
+            "source": "R12",
+            "target": "P11",
+            "cost": 15
+        },
+        {
+            "source": "R13",
+            "target": "P12",
+            "cost": 15
+        },
+        {
+            "source": "R13",
+            "target": "P8",
+            "cost": 10
+        },
+        {
+            "source": "R13",
+            "target": "P14",
+            "cost": 15
+        },
+        {
+            "source": "R14",
+            "target": "P9",
+            "cost": 15
+        },
+        {
+            "source": "R14",
+            "target": "P8",
+            "cost": 10
+        },
+        {
+            "source": "R14",
+            "target": "P6",
             "cost": 15
         },
         {
