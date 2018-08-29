@@ -238,7 +238,7 @@ var opts = {
 
 var spinner = new Spinner(opts).spin(target);
 
-d3.json("http://127.0.0.1:8000/Desktop/Trip_Planner-master/test.json", function(error, graph) {
+d3.json("http://localhost:8000/test.json", function(error, graph) {
     if (error) throw error;
 
     // stop loader
@@ -458,7 +458,7 @@ d3.json("http://127.0.0.1:8000/Desktop/Trip_Planner-master/test.json", function(
 
     })
 
-    //Show Path on click
+    // Show Path on click
     $('#card-area').on('click', '.card-link', function(e) {
         showPath(FinalSchedule[e.currentTarget.id]);
     })
@@ -487,7 +487,6 @@ d3.json("http://127.0.0.1:8000/Desktop/Trip_Planner-master/test.json", function(
         addDayCard(FinalSchedule);
 
     }
-
 
 
     // ----------------------------------------------------------------- //
@@ -696,7 +695,6 @@ d3.json("http://127.0.0.1:8000/Desktop/Trip_Planner-master/test.json", function(
 
     // Reduce the opacity of all node but the best path
     // can be optimize: each node save its own index, don't have to search all node over and over again.
-    // not all circles now, needs to be fixed
     function showPath(path) {
         let curr = path.head;
         let d;
@@ -1024,7 +1022,8 @@ d3.json("http://127.0.0.1:8000/Desktop/Trip_Planner-master/test.json", function(
                 temp1 = cost1;
                 cost1 = dijkstra(graph, path.lunch, graph.nodes[i]).minCost + dijkstra(graph, path.lunch.next, graph.nodes[i]).minCost;
 
-                if (cost1 > temp1) { result[0] = i; rest[restcount] = i;}   
+                if (cost1 > temp1) { result[0] = i;
+                    rest[restcount] = i; }
             }
         }
         restcount = restcount + 1;
@@ -1039,7 +1038,8 @@ d3.json("http://127.0.0.1:8000/Desktop/Trip_Planner-master/test.json", function(
                     temp2 = cost2;
                     cost2 = dijkstra(graph, path.dinner, graph.nodes[i]).minCost + dijkstra(graph, path.dinner.next, graph.nodes[i]).minCost;
                 }
-                if (cost2 > temp2) { result[1] = i; rest[restcount] = i;}
+                if (cost2 > temp2) { result[1] = i;
+                    rest[restcount] = i; }
             }
         }
 
@@ -1052,9 +1052,9 @@ d3.json("http://127.0.0.1:8000/Desktop/Trip_Planner-master/test.json", function(
         return result;
     }
 
-    function restcheck(d){
-        for (var i = 0 ; i < rest.length ; i++){
-            if (d == rest[i]){return false}
+    function restcheck(d) {
+        for (var i = 0; i < rest.length; i++) {
+            if (d == rest[i]) { return false }
         }
         return true;
     }
