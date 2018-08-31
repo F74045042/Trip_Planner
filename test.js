@@ -701,7 +701,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         let line;
         circle.style("opacity", 0.1);
         link.style("opacity", 0.1);
-        while (curr) {
+        while (curr.next) {
             // change node opacity
             for (var i = 0; i < graph.nodes.length; i++) {
                 d = d3.selectAll("circle")._groups[0][i];
@@ -713,7 +713,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             }
             // console.log(curr);
             // console.log(d);
-
             curr = curr.next;
 
             // change line opacity (for nodes that are directly connected)
@@ -732,8 +731,18 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                     line.style.opacity = 1;
                 }
             }
-
         }
+
+        // highlight hotel node
+        for (var i = 0; i < graph.nodes.length; i++) {
+            d = d3.selectAll("circle")._groups[0][i];
+            if (d.__data__.id == path.tailNode().id) {
+                // console.log(curr.id);
+                d.style.opacity = 1;
+                break;
+            }
+        }
+
 
     }
 
@@ -1022,8 +1031,10 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                 temp1 = cost1;
                 cost1 = dijkstra(graph, path.lunch, graph.nodes[i]).minCost + dijkstra(graph, path.lunch.next, graph.nodes[i]).minCost;
 
-                if (cost1 > temp1) { result[0] = i;
-                    rest[restcount] = i; }
+                if (cost1 > temp1) {
+                    result[0] = i;
+                    rest[restcount] = i;
+                }
             }
         }
         restcount = restcount + 1;
@@ -1038,8 +1049,10 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                     temp2 = cost2;
                     cost2 = dijkstra(graph, path.dinner, graph.nodes[i]).minCost + dijkstra(graph, path.dinner.next, graph.nodes[i]).minCost;
                 }
-                if (cost2 > temp2) { result[1] = i;
-                    rest[restcount] = i; }
+                if (cost2 > temp2) {
+                    result[1] = i;
+                    rest[restcount] = i;
+                }
             }
         }
 
