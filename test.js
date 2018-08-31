@@ -7,30 +7,30 @@ function POIList() {
 
     // --------------- member methods --------------- //
     this.insertNode = function(position, id, weight, time) {
-        if (position >= 0 && position <= this.length) {
-            let newNode = new node(id, weight, time, null, null);
-            let curr = this.head;
-            let prev;
-            let idx = 0;
+            if (position >= 0 && position <= this.length) {
+                let newNode = new node(id, weight, time, null, null);
+                let curr = this.head;
+                let prev;
+                let idx = 0;
 
-            if (position == 0) {
-                newNode.next = curr;
-                this.head = newNode;
-            } else {
-                while (idx++ < position) {
-                    prev = curr;
-                    curr = curr.next;
+                if (position == 0) {
+                    newNode.next = curr;
+                    this.head = newNode;
+                } else {
+                    while (idx++ < position) {
+                        prev = curr;
+                        curr = curr.next;
+                    }
+                    newNode.next = curr;
+                    prev.next = newNode;
                 }
-                newNode.next = curr;
-                prev.next = newNode;
+                this.length++;
+            } else {
+                console.log("out of index");
             }
-            this.length++;
-        } else {
-            console.log("out of index");
-        }
 
-    }
-    // append poi node
+        }
+        // append poi node
     this.addNode = function(id, weight, time) {
         const newNode = new node(id, weight, time, null, null);
         let curr;
@@ -285,6 +285,33 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             .on("drag", dragged)
             .on("end", dragended));
 
+    var marker = svg.append("circle");
+    marker.attr("r", 30)
+        .attr("transform", "translate(" + [461, 294] + ")");
+
+    // transition();
+
+    function transition(allLine, max, j = 0) {
+        if (j == max) {
+            j = 0;
+        }
+        marker.transition()
+            .duration(500)
+            .attrTween("transform", translateAlong(allLine[j]))
+            .on("end", function() {
+                transition(allLine[j + 1]);
+            }); // infinite loop
+    }
+
+    function translateAlong(path) {
+        var l = path.getTotalLength();
+        return function(d, i, a) {
+            return function(t) {
+                var p = path.getPointAtLength(t * l);
+                return "translate(" + p.x + "," + p.y + ")"; //Move marker
+            }
+        }
+    }
 
     // mouseover event
     node.on("mouseover", function(d) {
@@ -345,6 +372,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             .attr("y", function(d) {
                 return d.y;
             });
+
     }
 
 
@@ -699,6 +727,8 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         let curr = path.head;
         let d;
         let line;
+        let allLine = [];
+        let j = 0;
         circle.style("opacity", 0.1);
         link.style("opacity", 0.1);
         while (curr) {
@@ -706,7 +736,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             for (var i = 0; i < graph.nodes.length; i++) {
                 d = d3.selectAll("circle")._groups[0][i];
                 if (d.__data__.id == curr.id) {
-                    // console.log(curr.id);
+                    console.log(curr.id);
                     d.style.opacity = 1;
                     break;
                 }
@@ -720,6 +750,8 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             line = getLine(d.__data__.id, curr.id);
             if (line) {
                 line.style.opacity = 1;
+                allLine[j] = line;
+                j++;
             }
 
             // for nodes that are not directly connected
@@ -730,6 +762,8 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                 for (var i = 0; i < optPath.length - 1; i++) {
                     line = getLine(optPath[i], optPath[i + 1]);
                     line.style.opacity = 1;
+                    allLine[j] = line;
+                    j++;
                 }
             }
 
@@ -1022,8 +1056,10 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                 temp1 = cost1;
                 cost1 = dijkstra(graph, path.lunch, graph.nodes[i]).minCost + dijkstra(graph, path.lunch.next, graph.nodes[i]).minCost;
 
-                if (cost1 > temp1) { result[0] = i;
-                    rest[restcount] = i; }
+                if (cost1 > temp1) {
+                    result[0] = i;
+                    rest[restcount] = i;
+                }
             }
         }
         restcount = restcount + 1;
@@ -1038,8 +1074,10 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                     temp2 = cost2;
                     cost2 = dijkstra(graph, path.dinner, graph.nodes[i]).minCost + dijkstra(graph, path.dinner.next, graph.nodes[i]).minCost;
                 }
-                if (cost2 > temp2) { result[1] = i;
-                    rest[restcount] = i; }
+                if (cost2 > temp2) {
+                    result[1] = i;
+                    rest[restcount] = i;
+                }
             }
         }
 
@@ -1054,7 +1092,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     function restcheck(d) {
         for (var i = 0; i < rest.length; i++) {
-            if (d == rest[i]) { return false }
+            if (d == rest[i]) {
+                return false
+            }
         }
         return true;
     }
@@ -1253,7 +1293,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         }
 
     }
-
 
 });
 
