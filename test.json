@@ -3,85 +3,85 @@
         {
             "id": "P1",
             "weight": 3,
-            "time": 120,
+            "time": 80,
             "type": "tourist_attraction"
         },
         {
             "id": "P2",
             "weight": 4,
-            "time": 40,
+            "time": 80,
             "type": "tourist_attraction"
         },
         {
             "id": "P3",
             "weight": 3,
-            "time": 45,
+            "time": 90,
             "type": "tourist_attraction"
         },
         {
             "id": "P4",
             "weight": 4,
-            "time": 60,
+            "time": 120,
             "type": "tourist_attraction"
         },
         {
             "id": "P5",
             "weight": 5,
-            "time": 120,
+            "time": 100,
             "type": "tourist_attraction"
         },
         {
             "id": "P6",
             "weight": 8,
-            "time": 30,
+            "time": 120,
             "type": "tourist_attraction"
         },
         {
             "id": "P7",
             "weight": 9,
-            "time": 30,
+            "time": 110,
             "type": "tourist_attraction"
         },
         {
             "id": "P8",
             "weight": 6,
-            "time": 65,
+            "time": 130,
             "type": "tourist_attraction"
         },
         {
             "id": "P9",
             "weight": 11,
-            "time": 50,
+            "time": 100,
             "type": "tourist_attraction"
         },
         {
             "id": "P10",
             "weight": 2,
-            "time": 55,
+            "time": 110,
             "type": "tourist_attraction"
         },
         {
             "id": "P11",
             "weight": 10,
-            "time": 35,
+            "time": 150,
             "type": "tourist_attraction"
         },
         {
             "id": "P12",
             "weight": 9,
-            "time": 50,
+            "time": 160,
             "type": "tourist_attraction"
         },
         {
             "id": "R1",
             "weight": 5,
-            "time": 45,
+            "time": 65,
             "type": "restaurant"
         },
         {
             "id": "R2",
             "weight": 5,
-            "time": 60,
+            "time": 70,
             "type": "restaurant"
         },
         {
@@ -93,31 +93,31 @@
         {
             "id": "R4",
             "weight": 5,
-            "time": 40,
+            "time": 70,
             "type": "restaurant"
         },
         {
             "id": "R5",
             "weight": 5,
-            "time": 50,
+            "time": 65,
             "type": "restaurant"
         },
         {
             "id": "R6",
             "weight": 5,
-            "time": 45,
+            "time": 60,
             "type": "restaurant"
         },
         {
             "id": "R7",
             "weight": 5,
-            "time": 45,
+            "time": 60,
             "type": "restaurant"
         },
         {
             "id": "R8",
             "weight": 5,
-            "time": 40,
+            "time": 50,
             "type": "restaurant"
         },
         {
@@ -135,7 +135,7 @@
         {
             "id": "R11",
             "weight": 5,
-            "time": 30,
+            "time": 70,
             "type": "restaurant"
         },
         {
@@ -147,13 +147,13 @@
         {
             "id": "R13",
             "weight": 5,
-            "time": 30,
+            "time": 80,
             "type": "restaurant"
         },
         {
             "id": "R14",
             "weight": 5,
-            "time": 65,
+            "time": 90,
             "type": "restaurant"
         },
         {
@@ -210,202 +210,422 @@
         {
             "source": "P1",
             "target": "P2",
-            "cost": 30
-        },
-        {
-            "source": "P1",
-            "target": "P4",
-            "cost": 20
-        },
-        {
-            "source": "P1",
-            "target": "P5",
-            "cost": 15
-        },
-        {
-            "source": "P2",
-            "target": "P3",
-            "cost": 75
-        },
-        {
-            "source": "P4",
-            "target": "P6",
             "cost": 60
         },
         {
-            "source": "P4",
-            "target": "P2",
-            "cost": 15
+            "source": "P1",
+            "target": "P3",
+            "cost": 100
         },
         {
-            "source": "P2",
-            "target": "P5",
-            "cost": 25
-        },
-        {
-            "source": "P3",
+            "source": "P1",
             "target": "P4",
             "cost": 40
         },
         {
-            "source": "P3",
-            "target": "P6",
-            "cost": 60
-        },
-        {
-            "source": "P5",
-            "target": "P6",
-            "cost": 20
-        },
-        {
-            "source": "P6",
-            "target": "P2",
-            "cost": 5
-        },
-        {
-            "source": "P6",
-            "target": "P7",
-            "cost": 45
-        },
-        {
-            "source": "P6",
-            "target": "P8",
-            "cost": 10
-        },
-        {
-            "source": "P6",
-            "target": "P10",
-            "cost": 20
-        },
-        {
-            "source": "P6",
-            "target": "P12",
-            "cost": 30
-        },
-        {
-            "source": "P7",
-            "target": "P1",
-            "cost": 85
-        },
-        {
-            "source": "P7",
-            "target": "P2",
-            "cost": 90
-        },
-        {
-            "source": "P7",
-            "target": "P3",
-            "cost": 75
-        },
-        {
-            "source": "P7",
-            "target": "P4",
-            "cost": 70
-        },
-        {
-            "source": "P7",
+            "source": "P1",
             "target": "P5",
             "cost": 30
         },
         {
-            "source": "P7",
-            "target": "P8",
-            "cost": 10
-        },
-        {
-            "source": "P7",
-            "target": "P9",
-            "cost": 20
-        },
-        {
-            "source": "P7",
-            "target": "P10",
-            "cost": 30
-        },
-        {
-            "source": "P7",
-            "target": "P11",
-            "cost": 15
-        },
-        {
-            "source": "P7",
-            "target": "P12",
-            "cost": 5
-        },
-        {
-            "source": "P8",
-            "target": "P2",
-            "cost": 100
-        },
-        {
-            "source": "P8",
-            "target": "P4",
+            "source": "P1",
+            "target": "P6",
             "cost": 90
         },
         {
-            "source": "P8",
+            "source": "P1",
+            "target": "P7",
+            "cost": 50
+        },
+        {
+            "source": "P1",
+            "target": "P8",
+            "cost": 30
+        },
+        {
+            "source": "P1",
             "target": "P9",
-            "cost": 35
+            "cost": 75
         },
         {
-            "source": "P8",
+            "source": "P1",
             "target": "P10",
-            "cost": 25
+            "cost": 80
         },
         {
-            "source": "P8",
+            "source": "P1",
             "target": "P11",
-            "cost": 20
+            "cost": 60
         },
         {
-            "source": "P8",
+            "source": "P1",
             "target": "P12",
-            "cost": 20
+            "cost": 100
         },
         {
-            "source": "P9",
+            "source": "P1",
+            "target": "P13",
+            "cost": 80
+        },
+        {
+            "source": "P1",
+            "target": "P14",
+            "cost": 70
+        },
+        {
+            "source": "P2",
+            "target": "P3",
+            "cost": 50
+        },
+        {
+            "source": "P2",
+            "target": "P4",
+            "cost": 60
+        },
+        {
+            "source": "P2",
+            "target": "P5",
+            "cost": 120
+        },
+        {
+            "source": "P2",
+            "target": "P6",
+            "cost": 100
+        },
+        {
+            "source": "P2",
+            "target": "P7",
+            "cost": 80
+        },
+        {
+            "source": "P2",
+            "target": "P8",
+            "cost": 100
+        },
+        {
+            "source": "P2",
+            "target": "P9",
+            "cost": 50
+        },
+        {
+            "source": "P2",
             "target": "P10",
-            "cost": 10
+            "cost": 70
         },
         {
-            "source": "P9",
+            "source": "P2",
             "target": "P11",
-            "cost": 15
+            "cost": 90
         },
         {
-            "source": "P9",
-            "target": "P10",
-            "cost": 10
-        },
-        {
-            "source": "P11",
+            "source": "P2",
             "target": "P12",
-            "cost": 20
+            "cost": 120
+        },
+        {
+            "source": "P2",
+            "target": "P13",
+            "cost": 80
+        },
+        {
+            "source": "P2",
+            "target": "P14",
+            "cost": 60
+        },
+        {
+            "source": "P3",
+            "target": "P4",
+            "cost": 80
+        },
+        {
+            "source": "P3",
+            "target": "P5",
+            "cost": 100
+        },
+        {
+            "source": "P3",
+            "target": "P6",
+            "cost": 70
+        },
+        {
+            "source": "P3",
+            "target": "P7",
+            "cost": 90
+        },
+        {
+            "source": "P3",
+            "target": "P8",
+            "cost": 100
+        },
+        {
+            "source": "P3",
+            "target": "P9",
+            "cost": 50
+        },
+        {
+            "source": "P3",
+            "target": "P10",
+            "cost": 60
+        },
+        {
+            "source": "P3",
+            "target": "P11",
+            "cost": 90
+        },
+        {
+            "source": "P3",
+            "target": "P12",
+            "cost": 70
         },
         {
             "source": "P3",
             "target": "P13",
-            "cost": 20
+            "cost": 110
         },
         {
             "source": "P3",
             "target": "P14",
+            "cost": 60
+        },
+        {
+            "source": "P4",
+            "target": "P5",
+            "cost": 100
+        },
+        {
+            "source": "P4",
+            "target": "P6",
+            "cost": 120
+        },
+        {
+            "source": "P4",
+            "target": "P7",
+            "cost": 60
+        },
+        {
+            "source": "P4",
+            "target": "P8",
+            "cost": 110
+        },
+        {
+            "source": "P4",
+            "target": "P9",
+            "cost": 90
+        },
+        {
+            "source": "P4",
+            "target": "P10",
+            "cost": 80
+        },
+        {
+            "source": "P4",
+            "target": "P11",
+            "cost": 40
+        },
+        {
+            "source": "P4",
+            "target": "P12",
+            "cost": 100
+        },
+        {
+            "source": "P4",
+            "target": "P13",
+            "cost": 80
+        },
+        {
+            "source": "P4",
+            "target": "P14",
+            "cost": 50
+        },
+        {
+            "source": "P5",
+            "target": "P6",
+            "cost": 40
+        },
+        {
+            "source": "P5",
+            "target": "P7",
+            "cost": 60
+        },
+        {
+            "source": "P5",
+            "target": "P8",
+            "cost": 80
+        },
+        {
+            "source": "P5",
+            "target": "P9",
+            "cost": 70
+        },
+        {
+            "source": "P5",
+            "target": "P10",
+            "cost": 90
+        },
+        {
+            "source": "P5",
+            "target": "P11",
+            "cost": 100
+        },
+        {
+            "source": "P5",
+            "target": "P12",
+            "cost": 80
+        },
+        {
+            "source": "P5",
+            "target": "P13",
+            "cost": 50
+        },
+        {
+            "source": "P5",
+            "target": "P14",
+            "cost": 80
+        },
+        {
+            "source": "P6",
+            "target": "P2",
+            "cost": 40
+        },
+        {
+            "source": "P6",
+            "target": "P7",
+            "cost": 90
+        },
+        {
+            "source": "P6",
+            "target": "P8",
+            "cost": 200
+        },
+        {
+            "source": "P6",
+            "target": "P9",
+            "cost": 60
+        },
+        {
+            "source": "P6",
+            "target": "P10",
+            "cost": 40
+        },
+        {
+            "source": "P6",
+            "target": "P11",
+            "cost": 70
+        },
+        {
+            "source": "P6",
+            "target": "P12",
+            "cost": 60
+        },
+        {
+            "source": "P6",
+            "target": "P13",
+            "cost": 80
+        },
+        {
+            "source": "P6",
+            "target": "P14",
+            "cost": 90
+        },
+        {
+            "source": "P7",
+            "target": "P8",
+            "cost": 50
+        },
+        {
+            "source": "P7",
+            "target": "P9",
+            "cost": 40
+        },
+        {
+            "source": "P7",
+            "target": "P10",
+            "cost": 60
+        },
+        {
+            "source": "P7",
+            "target": "P11",
             "cost": 30
         },
         {
-            "source": "P14",
-            "target": "P1",
-            "cost": 10
+            "source": "P7",
+            "target": "P12",
+            "cost": 40
+        },
+        {
+            "source": "P7",
+            "target": "P13",
+            "cost": 50
+        },
+        {
+            "source": "P7",
+            "target": "P14",
+            "cost": 50
+        },
+        {
+            "source": "P8",
+            "target": "P9",
+            "cost": 70
+        },
+        {
+            "source": "P8",
+            "target": "P10",
+            "cost": 50
+        },
+        {
+            "source": "P8",
+            "target": "P11",
+            "cost": 40
+        },
+        {
+            "source": "P8",
+            "target": "P12",
+            "cost": 40
+        },
+        {
+            "source": "P8",
+            "target": "P13",
+            "cost": 80
+        },
+        {
+            "source": "P8",
+            "target": "P14",
+            "cost": 70
+        },
+        {
+            "source": "P9",
+            "target": "P10",
+            "cost": 60
+        },
+        {
+            "source": "P9",
+            "target": "P11",
+            "cost": 50
+        },
+        {
+            "source": "P9",
+            "target": "P12",
+            "cost": 45
+        },
+        {
+            "source": "P11",
+            "target": "P13",
+            "cost": 70
+        },
+        {
+            "source": "P11",
+            "target": "P14",
+            "cost": 80
         },
         {
             "source": "P14",
             "target": "R4",
-            "cost": 15
+            "cost": 50
         },
         {
             "source": "P13",
             "target": "P5",
-            "cost": 35
+            "cost": 70
         },
         {
             "source": "P13",
@@ -415,7 +635,7 @@
         {
             "source": "R1",
             "target": "P9",
-            "cost": 10
+            "cost": 55
         },
         {
             "source": "R1",

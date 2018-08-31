@@ -403,7 +403,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             // generate path starting from each node and store under poiIDX
             for (var idx = 0; idx < poiIDX.length; idx++) {
                 var newPath = new POIList();
-                genPath(poiIDX.nodeIDX(idx), 200, newPath, idx);
+                genPath(poiIDX.nodeIDX(idx), 400, newPath, idx);
             }
             reArr = genAllPathArr();
             // add path box to suggest page
@@ -1005,7 +1005,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     }
 
     function restaurant(path) {
-        cutPath(path, 50, 50);
+        cutPath(path, 75, 150);
         getmin(path);
     }
 
