@@ -7,30 +7,30 @@ function POIList() {
 
     // --------------- member methods --------------- //
     this.insertNode = function(position, id, weight, time) {
-            if (position >= 0 && position <= this.length) {
-                let newNode = new node(id, weight, time, null, null);
-                let curr = this.head;
-                let prev;
-                let idx = 0;
+        if (position >= 0 && position <= this.length) {
+            let newNode = new node(id, weight, time, null, null);
+            let curr = this.head;
+            let prev;
+            let idx = 0;
 
-                if (position == 0) {
-                    newNode.next = curr;
-                    this.head = newNode;
-                } else {
-                    while (idx++ < position) {
-                        prev = curr;
-                        curr = curr.next;
-                    }
-                    newNode.next = curr;
-                    prev.next = newNode;
-                }
-                this.length++;
+            if (position == 0) {
+                newNode.next = curr;
+                this.head = newNode;
             } else {
-                console.log("out of index");
+                while (idx++ < position) {
+                    prev = curr;
+                    curr = curr.next;
+                }
+                newNode.next = curr;
+                prev.next = newNode;
             }
-
+            this.length++;
+        } else {
+            console.log("out of index");
         }
-        // append poi node
+
+    }
+    // append poi node
     this.addNode = function(id, weight, time) {
         const newNode = new node(id, weight, time, null, null);
         let curr;
@@ -300,7 +300,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             .attrTween("transform", translateAlong(allLine[j]))
             .on("end", function() {
                 rotate_count++;
-                if(rotate_count == allLine.length){
+                if (rotate_count == allLine.length) {
                     rotate_count = 0;
                 }
                 transition(allLine, j + 1);
@@ -393,9 +393,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     }
 
     // test: dijkstra
-    console.log(graph.nodes[2].id);
-    console.log(graph.nodes[10].id);
-    dijkstra(graph, graph.nodes[2], graph.nodes[10]);
+    dijkstra(graph, getNodeByID(graph, "P9"), getNodeByID(graph, "R10"));
 
 
     //user input H
@@ -733,64 +731,62 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     // can be optimize: each node save its own index, don't have to search all node over and over again.
     function showPath(path) {
         let curr = path.head;
+        let optPath;
         let d;
         let line;
         let allLine = [];
-        let j = 0;
         rotate = [];
         rotate_count = 0;
 
         circle.style("opacity", 0.1);
         link.style("opacity", 0.1);
-        while (curr.next) {
+        while (curr) {
             // change node opacity
-            for (var i = 0; i < graph.nodes.length; i++) {
+            for (var i = 0; i < graph.nodes.length * 2; i++) {
                 d = d3.selectAll("circle")._groups[0][i];
                 if (d.__data__.id == curr.id) {
-                    console.log(curr.id);
                     d.style.opacity = 1;
                     break;
                 }
             }
-            console.log(curr);
-            // console.log(d);
-            curr = curr.next;
 
-            // change line opacity (for nodes that are directly connected)
-            line = getLine(d.__data__.id, curr.id);
+            if (!curr.next) break;
+
+
+            line = getLine(d.__data__.id, curr.next.id);
+
+            // if nodes are directly connected
             if (line) {
                 line.style.opacity = 1;
-                allLine[j] = line;
-                rotate[j] = isLinkRotate(d.__data__.id, curr.id);
-            }
 
-            // for nodes that are not directly connected
-            if (!line) {
-                let optPath = dijkstra(graph, getNodeByID(graph, d.__data__.id), getNodeByID(graph, curr.id)).pathArr;
+                // store links(for point along path)
+                allLine.push(line);
+                rotate.push(isLinkRotate(d.__data__.id, curr.next.id));
+
+            } else { // if not directly connected
+                optPath = dijkstra(graph, getNodeByID(graph, d.__data__.id), getNodeByID(graph, curr.next.id)).pathArr;
                 line = getLine(d.__data__.id, optPath[0]);
-                allLine[j] = line;
-                rotate[j] = isLinkRotate(d.__data__.id, optPath[0]);
-                j++;
                 line.style.opacity = 1;
+
+                // store links(for point along path)
+                allLine.push(line);
+                rotate.push(isLinkRotate(d.__data__.id, optPath[0]));
+
                 for (var i = 0; i < optPath.length - 1; i++) {
                     line = getLine(optPath[i], optPath[i + 1]);
                     line.style.opacity = 1;
-                    allLine[j] = line;
-                    rotate[j] = isLinkRotate(optPath[i], optPath[i + 1]);
-                    j++;
+
+                    // store links(for point along path)
+                    allLine.push(line);
+                    rotate.push(isLinkRotate(optPath[i], optPath[i + 1]));
                 }
             }
+
+            curr = curr.next;
+
         }
 
-        // highlight hotel node
-        for (var i = 0; i < graph.nodes.length; i++) {
-            d = d3.selectAll("circle")._groups[0][i];
-            if (d.__data__.id == path.tailNode().id) {
-                // console.log(curr.id);
-                d.style.opacity = 1;
-                break;
-            }
-        }
+
         console.log(allLine);
         console.log(rotate);
         transition(allLine);
