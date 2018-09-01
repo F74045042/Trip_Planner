@@ -711,7 +711,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                     break;
                 }
             }
-            // console.log(curr);
+            console.log(curr);
             // console.log(d);
             curr = curr.next;
 
