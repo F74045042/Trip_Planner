@@ -7,30 +7,30 @@ function POIList() {
 
     // --------------- member methods --------------- //
     this.insertNode = function(position, id, weight, time) {
-        if (position >= 0 && position <= this.length) {
-            let newNode = new node(id, weight, time, null, null);
-            let curr = this.head;
-            let prev;
-            let idx = 0;
+            if (position >= 0 && position <= this.length) {
+                let newNode = new node(id, weight, time, null, null);
+                let curr = this.head;
+                let prev;
+                let idx = 0;
 
-            if (position == 0) {
-                newNode.next = curr;
-                this.head = newNode;
-            } else {
-                while (idx++ < position) {
-                    prev = curr;
-                    curr = curr.next;
+                if (position == 0) {
+                    newNode.next = curr;
+                    this.head = newNode;
+                } else {
+                    while (idx++ < position) {
+                        prev = curr;
+                        curr = curr.next;
+                    }
+                    newNode.next = curr;
+                    prev.next = newNode;
                 }
-                newNode.next = curr;
-                prev.next = newNode;
+                this.length++;
+            } else {
+                console.log("out of index");
             }
-            this.length++;
-        } else {
-            console.log("out of index");
-        }
 
-    }
-    // append poi node
+        }
+        // append poi node
     this.addNode = function(id, weight, time) {
         const newNode = new node(id, weight, time, null, null);
         let curr;
@@ -285,6 +285,38 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             .on("drag", dragged)
             .on("end", dragended));
 
+    var marker = node.append("circle")
+    marker.attr("r", 10)
+        .attr("transform", "translate(" + [461, 294] + ")");
+
+    // transition();
+
+    function transition(allLine, j = 0) {
+        if (j == allLine.length) {
+            j = 0;
+        }
+        marker.transition()
+            .duration(1000)
+            .attrTween("transform", translateAlong(allLine[j]))
+            .on("end", function() {
+                rotate_count++;
+                if(rotate_count == allLine.length){
+                    rotate_count = 0;
+                }
+                transition(allLine, j + 1);
+            }); // infinite loop
+    }
+
+    function translateAlong(path) {
+        var l = path.getTotalLength();
+        return function(d, i, a) {
+            return function(t) {
+                atLength = rotate[rotate_count] === 1 ? (t * l) : (l - (t * l));
+                var p = path.getPointAtLength(atLength);
+                return "translate(" + p.x + "," + p.y + ")"; //Move marker
+            }
+        }
+    }
 
     // mouseover event
     node.on("mouseover", function(d) {
@@ -345,6 +377,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             .attr("y", function(d) {
                 return d.y;
             });
+
     }
 
 
@@ -375,6 +408,10 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     var rest = [];
     var restcount = 0;
+
+    //check if link need to rotate
+    var rotate = [];
+    var rotate_count = 0;
 
     // Go button click call initRcmd function
     document.getElementById("Go").onclick = function() {
@@ -654,10 +691,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     // Return the line between node1 and node2
     function getLine(id1, id2) {
         for (var i = 0; i < graph.links.length; i++) {
-            if ((graph.links[i].source.id == id1 && graph.links[i].target.id == id2) ||
-                (graph.links[i].target.id == id1 && graph.links[i].source.id == id2)) {
-                // console.log(d3.selectAll("line")._groups[0][i]);
+            if ((graph.links[i].source.id == id1 && graph.links[i].target.id == id2) || (graph.links[i].target.id == id1 && graph.links[i].source.id == id2)) {
                 return d3.selectAll("line")._groups[0][i];
+                // console.log(d3.selectAll("line")._groups[0][i]);
             }
         }
         return null;
@@ -699,6 +735,11 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         let curr = path.head;
         let d;
         let line;
+        let allLine = [];
+        let j = 0;
+        rotate = [];
+        rotate_count = 0;
+
         circle.style("opacity", 0.1);
         link.style("opacity", 0.1);
         while (curr.next) {
@@ -706,7 +747,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             for (var i = 0; i < graph.nodes.length; i++) {
                 d = d3.selectAll("circle")._groups[0][i];
                 if (d.__data__.id == curr.id) {
-                    // console.log(curr.id);
+                    console.log(curr.id);
                     d.style.opacity = 1;
                     break;
                 }
@@ -719,16 +760,24 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             line = getLine(d.__data__.id, curr.id);
             if (line) {
                 line.style.opacity = 1;
+                allLine[j] = line;
+                rotate[j] = isLinkRotate(d.__data__.id, curr.id);
             }
 
             // for nodes that are not directly connected
             if (!line) {
                 let optPath = dijkstra(graph, getNodeByID(graph, d.__data__.id), getNodeByID(graph, curr.id)).pathArr;
                 line = getLine(d.__data__.id, optPath[0]);
+                allLine[j] = line;
+                rotate[j] = isLinkRotate(d.__data__.id, optPath[0]);
+                j++;
                 line.style.opacity = 1;
                 for (var i = 0; i < optPath.length - 1; i++) {
                     line = getLine(optPath[i], optPath[i + 1]);
                     line.style.opacity = 1;
+                    allLine[j] = line;
+                    rotate[j] = isLinkRotate(optPath[i], optPath[i + 1]);
+                    j++;
                 }
             }
         }
@@ -742,7 +791,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                 break;
             }
         }
-
+        console.log(allLine);
+        console.log(rotate);
+        transition(allLine);
 
     }
 
@@ -1003,6 +1054,18 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         return null;
     }
 
+    // check if link need to rotate
+    function isLinkRotate(id1, id2) {
+        for (var i = 0; i < graph.links.length; i++) {
+            if ((graph.links[i].source.id == id1 && graph.links[i].target.id == id2)) {
+                return 1;
+            } else if ((graph.links[i].target.id == id1 && graph.links[i].source.id == id2)) {
+                return -1;
+            }
+        }
+        return null;
+    }
+
     // get node by node_id
     function getNodeByID(graph, id) {
         for (var i = 0; i < graph.nodes.length; i++) {
@@ -1067,7 +1130,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     function restcheck(d) {
         for (var i = 0; i < rest.length; i++) {
-            if (d == rest[i]) { return false }
+            if (d == rest[i]) {
+                return false
+            }
         }
         return true;
     }
@@ -1266,7 +1331,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         }
 
     }
-
 
 });
 
