@@ -7,30 +7,30 @@ function POIList() {
 
     // --------------- member methods --------------- //
     this.insertNode = function(position, id, weight, time) {
-        if (position >= 0 && position <= this.length) {
-            let newNode = new node(id, weight, time, null, null);
-            let curr = this.head;
-            let prev;
-            let idx = 0;
+            if (position >= 0 && position <= this.length) {
+                let newNode = new node(id, weight, time, null, null);
+                let curr = this.head;
+                let prev;
+                let idx = 0;
 
-            if (position == 0) {
-                newNode.next = curr;
-                this.head = newNode;
-            } else {
-                while (idx++ < position) {
-                    prev = curr;
-                    curr = curr.next;
+                if (position == 0) {
+                    newNode.next = curr;
+                    this.head = newNode;
+                } else {
+                    while (idx++ < position) {
+                        prev = curr;
+                        curr = curr.next;
+                    }
+                    newNode.next = curr;
+                    prev.next = newNode;
                 }
-                newNode.next = curr;
-                prev.next = newNode;
+                this.length++;
+            } else {
+                console.log("out of index");
             }
-            this.length++;
-        } else {
-            console.log("out of index");
-        }
 
-    }
-    // append poi node
+        }
+        // append poi node
     this.addNode = function(id, weight, time) {
         const newNode = new node(id, weight, time, null, null);
         let curr;
@@ -287,23 +287,25 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     var marker = node.append("circle")
     marker.attr("r", 10)
+        .attr("fill", function(d) {
+            return color("yellow");
+        })
         .attr("transform", "translate(" + [461, 294] + ")");
 
     // transition();
-
-    function transition(allLine, j = 0) {
+    function transition(allLine, j = 0, k = 0) {
         if (j == allLine.length) {
             j = 0;
         }
+        if (k == rotate.length) {
+            k = 0;
+        }
+        rotate_count = k;
         marker.transition()
             .duration(1000)
             .attrTween("transform", translateAlong(allLine[j]))
             .on("end", function() {
-                rotate_count++;
-                if (rotate_count == allLine.length) {
-                    rotate_count = 0;
-                }
-                transition(allLine, j + 1);
+                transition(allLine, j + 1, k + 1);
             }); // infinite loop
     }
 
@@ -311,9 +313,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         var l = path.getTotalLength();
         return function(d, i, a) {
             return function(t) {
-                atLength = rotate[rotate_count] === 1 ? (t * l) : (l - (t * l));
-                var p = path.getPointAtLength(atLength);
-                return "translate(" + p.x + "," + p.y + ")"; //Move marker
+                atLength = rotate[rotate_count] == 1 ? (t * l) : (l - (t * l));
+                var p1 = path.getPointAtLength(atLength);
+                return "translate(" + p1.x + "," + p1.y + ")"; //Move marker
             }
         }
     }
@@ -411,6 +413,14 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     var rotate = [];
     var rotate_count = 0;
 
+    //Go button key event listen on input days
+    document.getElementById("days").addEventListener("keyup", function(event) {
+        event.preventDefault();
+        console.log("hi");
+        if (event.keyCode === 13) {
+            document.getElementById("Go").click();
+        }
+    });
     // Go button click call initRcmd function
     document.getElementById("Go").onclick = function() {
         //document.getElementById("myTab").style.display="none";
@@ -500,6 +510,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     // trigger hotel/restaurant selection
     document.getElementById("genSchedule").onclick = function() {
+        $('#page1-tab').tab('show');
         // transform 'Final' to path array 'FinalSchedule'
         for (var i = 0; i < Final.length; i++) {
             var path = new POIList();
@@ -593,12 +604,15 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                     str += "->";
                 }
             }
-            // console.log(str);
-            $('#card-area').append("<div class=\"card\" style=\"width: 20rem; margin-right: 5rem; margin-bottom: 1rem;\">" +
+            start = str.split("->", 1);
+            str = str.replace(start + "->", "");
+            $('#card-area').append("<div class=\"card\" style=\"width: 23rem; margin-right: 2rem; margin-bottom: 1rem;\">" +
                 "<div class=\"card-body\">" +
-                "<h5 class=\"card-title\">Day " + (i + 1) + "</h5><div class=\"row justify-content-between\" id=\"choose-box\">" +
-                "</h3><div id=\"choose-content\" \"text-align:left\">" + str + "</div></div>" +
-                "<a href=\"#\" class=\"card-link\" id=" + i + ">Show Path</a></div></div>");
+                "<h5 class=\"card-title\">" + "Day" + (i + 1) + "</h5>" +
+                "<div class=\"row justify-content-between\" id=\"choose-box\">" +
+                "<h3 id=\"choose-node\">" + start + "</h3>" +
+                "<div id=\"choose-content\" style=\"margin-right: 10%;\">" + str + "</div></div>" +
+                "<a href=\"#\" class=\"card-link\" id=\"" + i + "\"onclick=\"showPath\">Show Path</a></div></div></div>");
             str = "";
         }
     }
