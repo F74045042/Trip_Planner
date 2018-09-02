@@ -7,30 +7,30 @@ function POIList() {
 
     // --------------- member methods --------------- //
     this.insertNode = function(position, id, weight, time) {
-            if (position >= 0 && position <= this.length) {
-                let newNode = new node(id, weight, time, null, null);
-                let curr = this.head;
-                let prev;
-                let idx = 0;
+        if (position >= 0 && position <= this.length) {
+            let newNode = new node(id, weight, time, null, null);
+            let curr = this.head;
+            let prev;
+            let idx = 0;
 
-                if (position == 0) {
-                    newNode.next = curr;
-                    this.head = newNode;
-                } else {
-                    while (idx++ < position) {
-                        prev = curr;
-                        curr = curr.next;
-                    }
-                    newNode.next = curr;
-                    prev.next = newNode;
-                }
-                this.length++;
+            if (position == 0) {
+                newNode.next = curr;
+                this.head = newNode;
             } else {
-                console.log("out of index");
+                while (idx++ < position) {
+                    prev = curr;
+                    curr = curr.next;
+                }
+                newNode.next = curr;
+                prev.next = newNode;
             }
-
+            this.length++;
+        } else {
+            console.log("out of index");
         }
-        // append poi node
+
+    }
+    // append poi node
     this.addNode = function(id, weight, time) {
         const newNode = new node(id, weight, time, null, null);
         let curr;
