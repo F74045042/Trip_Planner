@@ -1,3 +1,7 @@
+window.onerror = function() {
+    return true;
+}
+
 function POIList() {
     this.head = null;
     this.length = 0;
@@ -7,30 +11,30 @@ function POIList() {
 
     // --------------- member methods --------------- //
     this.insertNode = function(position, id, weight, time) {
-        if (position >= 0 && position <= this.length) {
-            let newNode = new node(id, weight, time, null, null);
-            let curr = this.head;
-            let prev;
-            let idx = 0;
+            if (position >= 0 && position <= this.length) {
+                let newNode = new node(id, weight, time, null, null);
+                let curr = this.head;
+                let prev;
+                let idx = 0;
 
-            if (position == 0) {
-                newNode.next = curr;
-                this.head = newNode;
-            } else {
-                while (idx++ < position) {
-                    prev = curr;
-                    curr = curr.next;
+                if (position == 0) {
+                    newNode.next = curr;
+                    this.head = newNode;
+                } else {
+                    while (idx++ < position) {
+                        prev = curr;
+                        curr = curr.next;
+                    }
+                    newNode.next = curr;
+                    prev.next = newNode;
                 }
-                newNode.next = curr;
-                prev.next = newNode;
+                this.length++;
+            } else {
+                console.log("out of index");
             }
-            this.length++;
-        } else {
-            console.log("out of index");
-        }
 
-    }
-    // append poi node
+        }
+        // append poi node
     this.addNode = function(id, weight, time) {
         const newNode = new node(id, weight, time, null, null);
         let curr;
@@ -394,9 +398,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             poiIDX.addNode(graph.nodes[i].id, graph.nodes[i].weight, graph.nodes[i].time);
     }
 
-    // test: dijkstra
-    dijkstra(graph, getNodeByID(graph, "P9"), getNodeByID(graph, "R10"));
-
 
     //user input H
     var H;
@@ -416,7 +417,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     //Go button key event listen on input days
     document.getElementById("days").addEventListener("keyup", function(event) {
         event.preventDefault();
-        console.log("hi");
         if (event.keyCode === 13) {
             document.getElementById("Go").click();
         }
@@ -427,6 +427,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         // document.getElementById("myTab").style.visibility="hidden";
 
         Day = getValue();
+        // console.log(Day);
         countDay = 0;
 
         // jump to suggest page
@@ -451,12 +452,15 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
                 genPath(poiIDX.nodeIDX(idx), 400, newPath, idx);
             }
             reArr = genAllPathArr();
+            console.log("poiIDX: ");
+            console.log(reArr);
             // add path box to suggest page
             addPathBox(getMaxWeight(reArr));
 
             H = currH;
         }
     };
+
 
     // path box click event
     $('#recommend').on('click', '#path-box', function(e) {
@@ -466,8 +470,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     // ChooseBox click event
     $('#choose').on('click', '#choosen', function(e) {
         if (countDay < Day) {
-            console.log(document.getElementById('choose-node').innerHTML);
-            document.getElementById("day-select").innerHTML = "Day " + (countDay + 1);
+            if (countDay < Day - 1) {
+                document.getElementById("day-select").innerHTML = "推薦 Day " + (countDay + 2);
+            }
             var str = document.getElementById('choose-node').innerHTML + getUpperCase(document.getElementById('choose-content').innerHTML);
             str = str.replace(/\s+/g, "");
             var arr = [];
@@ -485,8 +490,9 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             Final[countDay] = arr;
 
             //console.log(str);
-            console.log(Final);
             reArr = remain(Final[countDay]);
+            console.log("Remain Path: ");
+            console.log(reArr);
             var max = getMaxWeight(reArr);
             // console.log(max);
             clrPathBox();
@@ -510,6 +516,8 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     // trigger hotel/restaurant selection
     document.getElementById("genSchedule").onclick = function() {
+        console.log("Schedule without hotel & restaurant:");
+        console.log(Final);
         $('#page1-tab').tab('show');
         // transform 'Final' to path array 'FinalSchedule'
         for (var i = 0; i < Final.length; i++) {
@@ -532,8 +540,10 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         // Day Card appear in planning page.
         addDayCard(FinalSchedule);
 
-    }
+        console.log("after hotel & restaurant selection:");
+        console.log(FinalSchedule);
 
+    }
 
     // ----------------------------------------------------------------- //
 
@@ -550,7 +560,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             }
         }
         str = str.split(" ");
-        console.log(str2);
         return str2;
     }
 
@@ -570,7 +579,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         if ((c >= 0) && (c <= 9)) {
             str2 += c;
         }
-        console.log(str2);
         return str2;
     }
 
@@ -677,8 +685,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
     // get the value of each element from the form in planning.html
     function getValue() {
         var x = document.getElementById("frm");
-        console.log("Day: " + x.elements[1].value);
-        return x.elements[1].value;
+        return x.elements[0].value;
     }
 
     // check if a node is connected to the last poi in a path
@@ -800,9 +807,6 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
         }
 
-
-        console.log(allLine);
-        console.log(rotate);
         transition(allLine);
 
     }
@@ -853,12 +857,12 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
         chosen = UserChoose(path);
         temp = temp.concat(chosen);
 
-        console.log(chosen);
+        // console.log(chosen);
         Result[i] = chosen;
         path = genMultiItinerary(temp);
         //generate next day dropdown list
         list(path);
-        console.log(Result);
+        // console.log(Result);
         i++;
 
 
@@ -878,10 +882,10 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
 
     //for user to choose path
     function UserChoose(DayArray) {
-        console.log(DayArray);
+        // console.log(DayArray);
         var ddl = document.getElementById("DayArray")
         var choose = ddl.selectedIndex;
-        console.log(index);
+        // console.log(index);
 
         return DayArray[choose];
     }
@@ -1272,7 +1276,7 @@ d3.json("http://localhost:8000/test.json", function(error, graph) {
             minCost: costs[dest.id],
             pathArr: optPath
         };
-        console.log(results);
+        // console.log(results);
         return results;
     }
 
